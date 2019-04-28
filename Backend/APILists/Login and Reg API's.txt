@@ -1,0 +1,19 @@
+login:
+    
+    before Login:
+        http://127.0.0.1:8000/api/v1/rest-auth/login/                                                       (POST)
+        http://127.0.0.1:8000/api/v1/rest-auth/password/reset/                                              (POST)
+        http://127.0.0.1:8000/api/v1/rest-auth/password/reset/confirm/                                      (POST)
+        
+
+    After Login:
+        http://127.0.0.1:8000/api/v1/rest-auth/password/change/                                             (POST)
+        http://127.0.0.1:8000/api/v1/rest-auth/logout/                                                      (POST)
+        http://127.0.0.1:8000/api/v1/user/                                                                  (GET, PUT, PATCH)
+
+
+
+register:
+    http://127.0.0.1:8000/api/v1/rest-auth/registration/                                                    (POST)
+    http://127.0.0.1:8000/api/v1/rest-auth/registration/verify-email/                                       (POST)
+
