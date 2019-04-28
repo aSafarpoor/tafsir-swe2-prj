@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/snoop/Desktop/UNI/term 6/TafsirProject/Backend/tafsirProjectenv/bin/python3" "$0" "$@"
-' '''
+#!/home/snoop/Desktop/drfx/tafsirProjectenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

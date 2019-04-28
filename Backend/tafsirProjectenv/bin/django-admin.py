@@ -1,4 +1,4 @@
-#!/home/snoop/Desktop/UNI/term 6/TafsirProject/Backend/tafsirProjectenv/bin/python3
+#!/home/snoop/Desktop/drfx/tafsirProjectenv/bin/python3
 from django.core import management
 
 if __name__ == "__main__":

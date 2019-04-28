@@ -40,7 +40,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/snoop/Desktop/UNI/term 6/TafsirProject/Backend/tafsirProjectenv"
+VIRTUAL_ENV="/home/snoop/Desktop/drfx/tafsirProjectenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
