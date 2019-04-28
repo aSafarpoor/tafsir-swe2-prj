@@ -37,7 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-   
+    #-----------------------------------------------------------------------------------------------------------
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'api',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -121,4 +130,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-
+#----------------------------------------------------------------------------------------------------------------------------------
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_EMAIL_REQUIRED = True
+AUTH_USER_MODEL = 'users.CustomUser'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SITE_ID = 1
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tafsirqoran97@gmail.com'
+EMAIL_HOST_PASSWORD = 'kjkebxnbtybsyjyl'
