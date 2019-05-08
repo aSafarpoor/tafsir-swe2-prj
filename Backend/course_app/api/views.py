@@ -2,27 +2,30 @@ from rest_framework import generics
 from course_app.models import course
 #from serializers import CourseListSerializer
 from  .serializers import CourseListSerializer
-from  .serializers import CourseListSerializer,CourseCreateSerializer
 import json
+from django.http import HttpResponse
 
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
     serializer_class = CourseListSerializer
 
 
-class CourseCreateAPIView(generics.CreateAPIView):
-    # current_user = request.user
-    # print (current_user.id)
-    queryset = course.objects.all()
-    serializer_class = CourseCreateSerializer
-    #permission needed
+# class CourseCreateAPIView(generics.CreateAPIView):
+#     # current_user = request.user
+#     # print (current_user.id)
+#     queryset = course.objects.all()
+#     serializer_class = CourseCreateSerializer
+#     #permission needed
 
-from django.http import HttpResponse
 
 def create(request):
     
     if request.method=="GET":
-        json_data=request.GET['change']
+        try:
+            json_data=request.GET['make']
+        except:
+            message="bad urllll"
+            return HttpResponse(message)
         data=json.loads(json_data)
         message="start"
         current_user = request.user
@@ -60,9 +63,92 @@ def create(request):
         message="bad request"
         return HttpResponse(message)
 
+def change(request):
+    if request.method=="GET":
+        try:
+            json_data=request.GET['change']
+        except:
+            message="bad urlll"
+            return HttpResponse(message)
+        data=json.loads(json_data)
+        message="start"
+        current_user = request.user
+        #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
+        if current_user.teacher==True:
+            pass
+        else:
+            message="user is not a teacher"
+            return HttpResponse(message)
+        
+        try:
+            is_exist=course.objects.filter(name=data["old_name"] , course_teacher=current_user).exists()
+            if(is_exist==False):
+                message="not exist"
+                return HttpResponse(message)
+            
+            course_obj=course.objects.get(name=data["old_name"] , course_teacher=current_user)
+            #print("\n\n\n",course_obj.name,"\n\n\n")
+            course_obj.name=data["new_name"]
+            course_obj.summary=data["summary"]
+            course_obj.pre_movie=data["pre_movie"]
+            course_obj.Headlines=data["Headlines"]
+            course_obj.ref=data["ref"]
+            course_obj.price=int(data["price"])
+            course_obj.course_teacher=current_user
+            course_obj.course_main_field=data["course_main_field"]
+            course_obj.save()
+            message="changed"
+            return HttpResponse(message)
+        except:
+            message="not_enough_data"
+            return HttpResponse(message)
+       
+    else :
+        message="bad request"
+        return HttpResponse(message)
+
+def delete(request):
+    if request.method=="GET":
+        try:
+            json_data=request.GET['delete']
+        except:
+            message="bad url"
+            return HttpResponse(message)
+        data=json.loads(json_data)
+        message="start"
+        current_user = request.user
+        #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
+        if current_user.teacher==True:
+            pass
+        else:
+            message="user is not a teacher"
+            return HttpResponse(message)
+        
+        try:
+            is_exist=course.objects.filter(name=data["name"] , course_teacher=current_user).exists()
+            print("\n\n\n","llll","\n")
+            if(is_exist==False):
+                message="not exist"
+                return HttpResponse(message)
+            print("\n\n\n","ddd","\n")
+            obj=course.objects.filter(name=data["name"] , course_teacher=current_user)[0]
+            print("\n\n\n","vvv","\n")
+            obj.delete()
+            message="done"
+            return HttpResponse(message)
+        except:
+            message="not_enough_data"
+            return HttpResponse(message)
+       
+    else :
+        message="bad request"
+        return HttpResponse(message)
 
 ############################################
 '''
+#http://127.0.0.1:8000/api/v1/course/create/create/?make={%22name%22:%20%22aaaa%22,%22summary%22:%20%22as%22,%22pre_movie%22:%20%22%22,%22Headlines%22:%20%22%22,%22ref%22:%20%22%22,%22price%22:%20123,%22course_main_field%22:%20%22%22}
+#http://127.0.0.1:8000/api/v1/course/change/?change={%22old_name%22:%20%22aaaa%22,%22new_name%22:%20%22bbb%22,%22summary%22:%20%22as%22,%22pre_movie%22:%20%22%22,%22Headlines%22:%20%22%22,%22ref%22:%20%22%22,%22price%22:%20123,%22course_main_field%22:%20%22%22}
+#http://127.0.0.1:8000/api/v1/course/delete/?delete={%22name%22:%20%22bbb%22,%22summary%22:%20%22as%22,%22pre_movie%22:%20%22%22,%22Headlines%22:%20%22%22,%22ref%22:%20%22%22,%22price%22:%20123,%22course_main_field%22:%20%22%22}
 {
     "name": "aa",
     "summary": "as",
@@ -74,63 +160,3 @@ def create(request):
 }
 '''
 ############################################
-
-
-'''
-f request.method == 'GET':
-    do_something()
-elif request.method == 'POST':
-    do_something_else()
-'''
-
-
-'''
-
-def Buy_Sell(request):
-    if 'change' in request.GET:
-        my_change=request.GET['change'].split('$')
-        message="start"
-        if request.session.has_key("username"):
-
-            if request.session["usern	ame"] == my_change[0]:
-                user_name=my_change[0]
-                number_of_stock=int(my_change[1])
-                new_money_person_have=int(my_change[2])
-                stocks_name=my_change[3]
-
-                un = Person.objects.get(username=user_name)
-                bn = Bourse.objects.get(namad=stocks_name)
-
-
-                is_exist = MemberShip.objects.filter(
-                    bourse=stocks_name,person=user_name).exists()
-
-                if(is_exist==False and number_of_stock!=0):
-                    MemberShip.objects.create(bourse=bn,person=un,number_of_stocks_person_has=number_of_stock)
-                    message='ok'
-
-                else:
-                    obj=MemberShip.objects.get(bourse=bn , person=un)
-                    if(number_of_stock==0):
-                        obj.delete()
-                        message='bye_bye'
-                    else:
-                        obj.number_of_stocks_person_has=number_of_stock
-                        obj.save()
-                        message="ok!!"
-
-
-
-                un.money=new_money_person_have
-                un.save()
-            else:
-                message="bad username"
-
-        else:
-            message = "not login"
-            
-        return HttpResponse(message)
-
-
-    return HttpResponse('bad request :D')
-'''
