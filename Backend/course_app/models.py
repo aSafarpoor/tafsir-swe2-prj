@@ -7,7 +7,7 @@ from users.models import CustomUser as t_model
 
 class course (models.Model) : 
     name=models.TextField(null=False,max_length=50)
-    Summary=models.TextField(null=True,max_length=250)
+    summary=models.TextField(null=True,max_length=250)
     pre_movie=models.TextField(null=True,blank=True)
     Headlines=models.TextField(null=True,blank=True,max_length=450)
     user_number=models.IntegerField(default=0)
@@ -18,7 +18,7 @@ class course (models.Model) :
     all_text_content=models.TextField(null=True,blank=True)
     exam=models.TextField(null=True,blank=True)
     course_teacher=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_teacher',default=0)
-    course_fields=models.TextField(null=True,blank=True,max_length=100)
+    course_main_field=models.TextField(null=True,blank=True,max_length=100)
     #course_main_field=models.ForeignKey(fields,on_delete=models.CASCADE,null=True,blank=True,related_name='fk_fields1')
 
 
