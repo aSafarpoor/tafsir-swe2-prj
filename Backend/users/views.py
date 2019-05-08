@@ -6,7 +6,7 @@ from . import serializers
 from course_app.models import course
 from users.models import CustomUser
 class UserListView(generics.ListCreateAPIView):
-    queryset = models.CustomUser.objects.all()
+    queryset = models.CustomUser.objects.filter(teacher=True)
     serializer_class = serializers.UserSerializer
 
 
