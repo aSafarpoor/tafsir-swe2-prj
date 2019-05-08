@@ -29,7 +29,13 @@ def create(request):
         data=json.loads(json_data)
         message="start"
         current_user = request.user
-        #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
+        try :
+            name=current_user.name
+        except:
+            message="not logged in"
+            return HttpResponse(message)
+        
+        #print("\n\n\n",current_user,"\n\n\n")
         if current_user.teacher==True:
             pass
         else:
@@ -73,6 +79,11 @@ def change(request):
         data=json.loads(json_data)
         message="start"
         current_user = request.user
+        try :
+            name=current_user.name
+        except:
+            message="not logged in"
+            return HttpResponse(message)
         #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
         if current_user.teacher==True:
             pass
@@ -117,6 +128,11 @@ def delete(request):
         data=json.loads(json_data)
         message="start"
         current_user = request.user
+        try :
+            name=current_user.name
+        except:
+            message="not logged in"
+            return HttpResponse(message)
         #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
         if current_user.teacher==True:
             pass
