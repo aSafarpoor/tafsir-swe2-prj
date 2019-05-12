@@ -3,11 +3,14 @@ from rest_framework.serializers import ModelSerializer
 from . import models
 from course_app.models import course
 
-class UserSerializer(serializers.ModelSerializer):
+class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
         fields = ('id','email', 'username','course_counter')
-
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.CustomUser
+        fields = ('id','email', 'username')
 
 class TeacherInfoSerializer(ModelSerializer):
     class Meta:

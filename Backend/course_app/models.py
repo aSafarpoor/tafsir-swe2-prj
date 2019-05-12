@@ -3,10 +3,12 @@ from django.db import models
 # from fields.models import fields
 from users.models import CustomUser as t_model
 
+
+
 # Create your models here.
 
 class course (models.Model) : 
-    name=models.TextField(null=False,max_length=50)
+    name=models.TextField(null=False,max_length=50,default="no_Name")
     summary=models.TextField(null=True,max_length=250)
     pre_movie=models.TextField(null=True,blank=True)
     Headlines=models.TextField(null=True,blank=True,max_length=450)
@@ -19,6 +21,7 @@ class course (models.Model) :
     exam=models.TextField(null=True,blank=True)
     course_teacher=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_teacher',default=0)
     course_main_field=models.TextField(null=True,blank=True,max_length=100)
+    user_counter=models.IntegerField(default=0)
     #course_main_field=models.ForeignKey(fields,on_delete=models.CASCADE,null=True,blank=True,related_name='fk_fields1')
 
 
@@ -35,3 +38,12 @@ def create_remove(sender, **kwargs):
 
 signals.post_save.connect(create_remove, sender=course)
 signals.post_delete.connect(create_remove,sender=course)
+
+
+class who_has_what(models.Model):
+    grade=models.IntegerField(null=True,blank=True)
+    last_pass_section=models.IntegerField(default=0)
+    course_completed=models.IntegerField(default=False)
+    course_finished_time=models.TimeField(null=True,blank=True)
+    course_user=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_student',default=0)
+    course_name=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fk_course',default=0)
