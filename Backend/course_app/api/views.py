@@ -10,26 +10,21 @@ class CourseListAPIview(generics.ListAPIView):
     serializer_class = CourseListSerializer
 
 
-# class CourseCreateAPIView(generics.CreateAPIView):
-#     # current_user = request.user
-#     # print (current_user.id)
-#     queryset = course.objects.all()
-#     serializer_class = CourseCreateSerializer
-#     #permission needed
-
 
 def create(request):
     
-    if request.method=="GET":
+    if request.method=="POST":
         try:
-            json_data=request.GET['make']
+            json_data=request.body
         except:
             message="bad urllll"
             return HttpResponse(message)
+        
         data=json.loads(json_data)
-        message="start"
-        current_user = request.user
+
+
         try :
+            current_user = request.user
             name=current_user.name
         except:
             message="not logged in"
@@ -70,16 +65,19 @@ def create(request):
         return HttpResponse(message)
 
 def change(request):
-    if request.method=="GET":
+    
+    if request.method=="POST":
         try:
-            json_data=request.GET['change']
+            json_data=request.body
         except:
-            message="bad urlll"
+            message="bad urllll"
             return HttpResponse(message)
+        
         data=json.loads(json_data)
         message="start"
-        current_user = request.user
+        
         try :
+            current_user = request.user
             name=current_user.name
         except:
             message="not logged in"
@@ -119,16 +117,18 @@ def change(request):
         return HttpResponse(message)
 
 def delete(request):
-    if request.method=="GET":
+    if request.method=="POST":
         try:
-            json_data=request.GET['delete']
+            json_data=request.body
         except:
-            message="bad url"
+            message="bad urllll"
             return HttpResponse(message)
+        
         data=json.loads(json_data)
         message="start"
-        current_user = request.user
+        
         try :
+            current_user = request.user
             name=current_user.name
         except:
             message="not logged in"
