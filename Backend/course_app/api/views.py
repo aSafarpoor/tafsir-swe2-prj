@@ -1,5 +1,5 @@
 from rest_framework import generics
-from course_app.models import course
+from course_app.models import course,section,question_exam
 #from serializers import CourseListSerializer
 from  .serializers import CourseListSerializer
 import json
@@ -8,7 +8,10 @@ from django.http import HttpResponse
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
     serializer_class = CourseListSerializer
-
+'''class SectionListAPIview(generics.ListAPIView):
+    queryset = section.objects.all()
+    serializer_class = SectionListSerializer
+'''
 
 
 def create(request):
@@ -42,6 +45,7 @@ def create(request):
             if(is_exist==True):
                 message="exist course with same name for this user"
                 return HttpResponse(message)
+            number_of_sections=data["number_of_sections"]
             course_obj=course()
             course_obj.name=data["name"]
             course_obj.summary=data["summary"]
@@ -54,6 +58,36 @@ def create(request):
             course_obj.course_teacher=current_user
             course_obj.course_main_field=data["course_main_field"]
             course_obj.save()
+            for i in range(1,number_of_sections+1):
+                section_dict=data[str(i)]
+                #print(section_dict)
+                section_obj=section()
+                section_obj.part=i
+                section_obj.name=section_dict["name"]
+                section_obj.movie=section_dict["movie"]
+                section_obj.file=section_dict["file"]
+                section_obj.course=course_obj
+                section_obj.save()
+                num=section_dict["number_of_exam_question"]
+                #exam_dict=section_dict[str(num)
+                for j in range(1,num+1):
+                    print("ssssssssssssssss")
+                    info=section_dict[str(j)]
+                    print("zzzzzzzzzzzzzzzzzz")
+                    q_obj=question_exam()
+                    print("WWWw")
+                    q_obj.number=j#str(j)
+                    print("qqqqq")
+                    q_obj.question=info["question"]
+                    q_obj.choice1=info["choice1"]
+                    print("nnnnn")
+                    q_obj.choice2=info["choice2"]
+                    q_obj.choice3=info["choice3"]
+                    q_obj.choice4=info["choice4"]
+                    q_obj.true_choice=info["true_choice"]
+                    q_obj.whitch_section=section_obj
+                    q_obj.save()
+                    print("333333333333333333333333")
             message="created"
             return HttpResponse(message)
         except:
@@ -176,3 +210,41 @@ def delete(request):
 }
 '''
 ############################################
+
+
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
+'''{
+    "name": "xddsssssqqqha",
+    "summary": "yad midahad",
+    "pre_movie": "",
+    "Headlines": "",
+    "ref": "",
+    "price": 123,
+    "course_main_field": "",
+    "number_of_sections":1,
+    "1":{
+ 			    "name":"jalase 1",
+			    "movie":"",
+			    "file":"",
+			    "number_of_exam_question":2,
+			    "1":{
+				    	"question":"soal1",
+						"choice1":"11",
+						"choice2":"22",
+						"choice3":"33",
+						"choice4":"44",
+						"true_choice":1
+					},
+				"2":{
+				    	"question":"soal2",
+						"choice1":"11",
+						"choice2":"22",
+						"choice3":"33",
+						"choice4":"44",
+						"true_choice":2
+					}   
+    	}
+    
+}'''
+####################################
+

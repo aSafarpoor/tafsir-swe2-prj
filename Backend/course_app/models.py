@@ -47,3 +47,22 @@ class who_has_what(models.Model):
     course_finished_time=models.TimeField(null=True,blank=True)
     course_user=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_student',default=0)
     course_name=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fk_course',default=0)
+    grade=models.TextField(null=True,blank=True,default="")
+    total_grade=models.IntegerField(null=True,blank=True,default=-1)
+
+class section(models.Model):
+    part=models.IntegerField(default=0,null=False,blank=False)
+    name=models.TextField(max_length=100,null=True,blank=True)
+    movie=models.TextField(max_length=600,null=True,blank=True)
+    file=models.FileField(null=True,blank=True)
+    course=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fkcourse',default=0)
+
+class question_exam(models.Model):
+    number=models.IntegerField(default=-1,null=False,blank=False)
+    question=models.TextField(max_length=300,null=True,blank=True)
+    choice1=models.TextField(max_length=200,null=True,blank=True)
+    choice2=models.TextField(max_length=200,null=True,blank=True)
+    choice3=models.TextField(max_length=200,null=True,blank=True)
+    choice4=models.TextField(max_length=200,null=True,blank=True)
+    true_choice=models.IntegerField(default=-1,null=False,blank=False)
+    whitch_section=models.ForeignKey(section,on_delete=models.CASCADE,related_name='fk_section',default=0)

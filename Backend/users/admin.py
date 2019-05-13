@@ -4,8 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
-from course_app.models import course
-from course_app.models import who_has_what
+from course_app.models import course,section
+from course_app.models import who_has_what,question_exam
 #class CustomUserAdmin(UserAdmin):
     #add_form = CustomUserCreationForm
     #form = CustomUserChangeForm
@@ -14,4 +14,6 @@ from course_app.models import who_has_what
 
 admin.site.register(CustomUser)#, CustomUserAdmin
 admin.site.register(course)
+admin.site.register(question_exam)
+admin.site.register(section)
 admin.site.register(who_has_what)
