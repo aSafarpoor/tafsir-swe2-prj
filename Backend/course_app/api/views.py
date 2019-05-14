@@ -69,25 +69,24 @@ def create(request):
                 section_obj.course=course_obj
                 section_obj.save()
                 num=section_dict["number_of_exam_question"]
-                #exam_dict=section_dict[str(num)
                 for j in range(1,num+1):
-                    print("ssssssssssssssss")
+                    
                     info=section_dict[str(j)]
-                    print("zzzzzzzzzzzzzzzzzz")
+                    
                     q_obj=question_exam()
-                    print("WWWw")
+                    
                     q_obj.number=j#str(j)
-                    print("qqqqq")
+                    
                     q_obj.question=info["question"]
                     q_obj.choice1=info["choice1"]
-                    print("nnnnn")
+                    
                     q_obj.choice2=info["choice2"]
                     q_obj.choice3=info["choice3"]
                     q_obj.choice4=info["choice4"]
                     q_obj.true_choice=info["true_choice"]
                     q_obj.whitch_section=section_obj
                     q_obj.save()
-                    print("333333333333333333333333")
+                    
             message="created"
             return HttpResponse(message)
         except:
@@ -116,7 +115,6 @@ def change(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        #print("\n\n\n",current_user.first_name,"\n\n\n")///ok///
         if current_user.teacher==True:
             pass
         else:
@@ -130,7 +128,7 @@ def change(request):
                 return HttpResponse(message)
             
             course_obj=course.objects.get(name=data["old_name"] , course_teacher=current_user)
-            #print("\n\n\n",course_obj.name,"\n\n\n")
+            
             course_obj.name=data["new_name"]
             course_obj.summary=data["summary"]
             course_obj.pre_movie=data["pre_movie"]
@@ -176,13 +174,13 @@ def delete(request):
         
         try:
             is_exist=course.objects.filter(name=data["name"] , course_teacher=current_user).exists()
-            print("\n\n\n","llll","\n")
+            
             if(is_exist==False):
                 message="not exist"
                 return HttpResponse(message)
-            print("\n\n\n","ddd","\n")
+            
             obj=course.objects.filter(name=data["name"] , course_teacher=current_user)[0]
-            print("\n\n\n","vvv","\n")
+            
             obj.delete()
             message="done"
             return HttpResponse(message)

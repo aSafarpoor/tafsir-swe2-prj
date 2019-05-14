@@ -43,7 +43,7 @@ signals.post_delete.connect(create_remove,sender=course)
 class who_has_what(models.Model):
     grade=models.IntegerField(null=True,blank=True)
     last_pass_section=models.IntegerField(default=0)
-    course_completed=models.IntegerField(default=False)
+    course_completed=models.BooleanField(default=False)
     course_finished_time=models.TimeField(null=True,blank=True)
     course_user=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_student',default=0)
     course_name=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fk_course',default=0)
