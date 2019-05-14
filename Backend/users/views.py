@@ -15,6 +15,7 @@ class TeacherListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(teacher=True)
     serializer_class = serializers.TeacherSerializer
 
+
 class TeacherDetailsAPIView(generics.RetrieveAPIView):
     #session = Session.objects.get(session_key=session_key)
     lookup_field = 'id'
@@ -34,14 +35,14 @@ class JoinTable(generics.ListAPIView):
 
 
 def register(request):
-    
+
     if request.method=="POST":
         try:
             json_data=request.body
         except:
             message="bad urllll"
             return HttpResponse(message)
-        
+
         data=json.loads(json_data)
 
 
@@ -51,33 +52,33 @@ def register(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        
+
         if current_user.student==True:
             pass
         else:
             message="user is not a student"
             return HttpResponse(message)
-        
+
         try:####################should be complete############
             is_course_exist=course.objects.filter(id=data["id"] ).exists()
-           
+
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
             current_course=course.objects.filter(id=data["id"] )[0]
             #print("\n\n","llllllllllllllllllllllllllll","\n",current_course.name,"\n\n")
             try:
-                
+
                 is_exist=who_has_what.objects.filter(course_user=current_user , course_name=current_course ).exists()
-    
+
                 if(is_exist==True):
                     message="registered before"
                     return HttpResponse(message)
-                
+
             except:
                     message="bad request"
                     return HttpResponse(message)
-                    
+
             obj=who_has_what()
             obj.course_user=current_user
             obj.course_name=current_course
@@ -90,7 +91,7 @@ def register(request):
         except:
             message="not_enough_data"
             return HttpResponse(message)
-       
+
     else :
         message="bad request"
         return HttpResponse(message)
