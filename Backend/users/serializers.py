@@ -6,7 +6,7 @@ from course_app.models import course
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
-        fields = ('id','email', 'username','course_counter')
+        fields = ('id','email', 'username','course_counter','picture')
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
