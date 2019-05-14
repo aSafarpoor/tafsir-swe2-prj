@@ -1,9 +1,9 @@
 from rest_framework import generics
 from .serializers import TeacherInfoSerializer,WhatPersonHave,TeacherSerializer,StudentSerializer
 import json
-from django.http import HttpResponse
-from django.http import JsonResponse
-from django.core import serializers
+import os
+from django.http import HttpResponse,JsonResponse
+from django.core import  serializers
 from . import models
 from . import serializers
 from course_app.models import course
@@ -105,7 +105,12 @@ def snippet_list(request):
         snippets = Snippet.objects.all()
         serializer = SnippetSerializer(snippets, many=True)
         return Response(serializer.data)
-'''
+# '''
+# class JsonResponse(HttpResponse):
+#     def __init__(self, content={}, mimetype=None, status=None,
+#              content_type='application/json'):
+#         super(JsonResponse, self).__init__(json.dumps(content), mimetype=mimetype,
+#                                            status=status, content_type=content_type)
 
 def multiple_section(request):
     if request.method=='GET':
@@ -123,7 +128,7 @@ def multiple_section(request):
             who_has_what
 
             is_course_exist=course.objects.filter(id=requested_id).exists()
-            print("11111111111111111111")
+
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
@@ -163,8 +168,20 @@ def multiple_section(request):
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        temp["file"]=obj.file
+                        
+                        try:
 
+                            r1=request.path
+                            r2=request.build_absolute_uri('/')
+                            r3=r2[:-1]+r1
+                            
+                            file_=str(obj.file.url)
+                            r3+=file_
+                            temp["file"]=r3
+                            
+                        except:
+            
+                            temp["file"]=""    
                         dict[obj.part]=temp
                         print("y")
                     else:
@@ -185,8 +202,12 @@ def multiple_section(request):
 
             #send sth :)
             #should complete it 
-            return HttpResponse(dict)            
-            
+           
+           #JsonResponse(dict)  
+            print("type is: ",type(dict))
+            #dict2={1: {'part': 1, 'name': 'jalase 1', 'movie': '', 'file': '<FieldFile: None>'}, ' general_info': {'name': 'xddsssssqqqha', 'ref': ''}}
+         
+            return JsonResponse(dict)
 
      
      

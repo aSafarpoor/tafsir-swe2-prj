@@ -52,9 +52,9 @@ class who_has_what(models.Model):
 
 class section(models.Model):
     part=models.IntegerField(default=0,null=False,blank=False)
-    name=models.TextField(max_length=100,null=True,blank=True)
-    movie=models.TextField(max_length=600,null=True,blank=True)
-    file=models.FileField(null=True,blank=True)
+    name=models.TextField(max_length=100,null=True,blank=True,default="")
+    movie=models.TextField(max_length=600,null=True,blank=True,default="")
+    file=models.FileField(null=True,blank=True,upload_to="anja/")#,defult="anja/nofile.txt")
     course=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fkcourse',default=0)
 
 class question_exam(models.Model):
