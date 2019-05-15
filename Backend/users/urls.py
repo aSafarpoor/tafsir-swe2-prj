@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^teacher_info/(?P<id>\w{0,50})/$', views.TeacherDetailsAPIView.as_view()),
     url(r'^register',views.register),
     url(r'^parts',views.multiple_section),
+    url(r'^test',views.test),
 ]
