@@ -6,7 +6,7 @@ urlpatterns = [
     #url(r'^section_list',views.SectionListAPIview.as_view()),
     #url(r'^course/create$', views.CourseCreateAPIView.as_view(), name='course-create'),
     url(r'^create',views.create),
-    url(r'^change',views.change),
-    url(r'^delete',views.delete),
+    url(r'^edit',views.edit),
+    
 ]
 

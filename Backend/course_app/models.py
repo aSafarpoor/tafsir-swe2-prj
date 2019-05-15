@@ -65,4 +65,4 @@ class question_exam(models.Model):
     choice3=models.TextField(max_length=200,null=True,blank=True)
     choice4=models.TextField(max_length=200,null=True,blank=True)
     true_choice=models.IntegerField(default=-1,null=False,blank=False)
-    whitch_section=models.ForeignKey(section,on_delete=models.CASCADE,related_name='fk_section',default=0)
+    which_section=models.ForeignKey(section,on_delete=models.CASCADE,related_name='fk_section',default=0)

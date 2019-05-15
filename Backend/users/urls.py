@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^register',views.register),
     url(r'^parts',views.multiple_section),
     url(r'^test',views.test),
+    url(r'^course_info',views.get_own_course_info),
+    
 ]
 
 

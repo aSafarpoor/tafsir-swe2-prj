@@ -258,7 +258,7 @@ def test(request):
             for i in range(1,counter+1):
                 num=i
                 
-                q_obj=question_exam.objects.filter(whitch_section=current_section,number=num)[0]
+                q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
                 choice=data[str(num)]
                 true_choice=q_obj.true_choice
                 
@@ -330,3 +330,138 @@ def test(request):
 '''
         
         
+
+
+
+
+def get_own_course_info(request):
+    if request.method=='GET':
+        if 's' in request.GET:
+            requested_id=int(request.GET['s'])
+        else:
+            message="bad request"
+            return HttpResponse(message)
+        try:
+            current_user=request.user
+        except:
+            message="not available user"
+            return HttpResponse(message)
+        try:
+            # who_has_what
+
+            is_course_exist=course.objects.filter(id=requested_id).exists()
+
+            if(is_course_exist==False):
+                message="not eanble course"
+                return HttpResponse(message)
+            
+            current_course=course.objects.filter(id=requested_id)[0]
+
+            
+            if(current_course.course_teacher==current_user):
+                pass
+
+            else:
+                message="not owner"
+                return HttpResponse(message)
+            #enable num is always enable
+            
+            try:
+                is_exist=section.objects.filter(course=current_course).exists()
+                query=section.objects.filter(course=current_course)
+            except:
+                message="bed request!!!"
+                return HttpResponse(message) 
+            
+            dict={}
+            try:
+             
+                for i in range(len(query)):
+                    obj=query[i]
+                    if(True):
+                        ii=obj.part-1
+                       
+                        temp={}
+                        
+                        temp["part"]=obj.part
+                        temp["name"]=obj.name
+                        temp["movie"]=obj.movie
+                        
+                        try:
+
+                            r1=request.path
+                            r2=request.build_absolute_uri('/')
+                            #r3=r2[:-1]+r1
+                            r3=r2[:-1]
+                          
+                            file_=str(obj.file.url)
+                            r3+=file_
+                            temp["file"]=r3
+                            
+                        except:
+            
+                            temp["file"]=""    
+
+                        #each section has some question_exams:
+
+                        try:
+                            is_exist=question_exam.objects.filter(which_section=obj).exists()
+                            q_query=question_exam.objects.filter(which_section=obj)
+                        except:
+                            pass
+
+                         
+                        for i in range(len(q_query)):
+                            q_object=q_query[i]
+                            
+                            ii=q_object.number
+                        
+                            q_temp={}
+                            
+                            q_temp["number"]=ii
+                            q_temp["question"]=q_object.question
+                            q_temp["choice1"]=q_object.choice1
+                            q_temp["choice2"]=q_object.choice2
+                            q_temp["choice3"]=q_object.choice3
+                            q_temp["choice4"]=q_object.choice4
+                            q_temp["true_choice"]=q_object.true_choice
+                            
+                            question_num="q_num_"+str(ii)
+                            temp[question_num]=q_temp  
+
+
+                        dict[obj.part]=temp
+
+                print(1111111111)        
+                #add general info:
+                temp={} 
+                temp["name"]=current_course.name
+                
+                temp["summary"]=current_course.summary                    
+                temp["pre_movie"]=current_course.pre_movie
+                temp["Headlines"]=current_course.Headlines
+                print("ddd")
+                temp["course_section_number"]=current_course.course_section_number
+                temp["total_time_of_course"]=current_course.total_time_of_course
+                temp["ref"]=current_course.ref
+                temp["price"]=current_course.price   
+                #temp["course_teacher"]=current_user
+                temp["course_main_field"]=current_course.course_main_field
+
+  
+
+
+                dict["general_info"]=temp
+            except:
+                message="404"
+                return HttpResponse(message)
+          
+            print("dict is:  ",dict)
+            return JsonResponse(dict)
+
+        except:
+            print("ccccc")
+            message="404"
+            return HttpResponse(message)
+    message="404"
+    return HttpResponse(message)
