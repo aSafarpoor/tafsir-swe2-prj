@@ -10,7 +10,7 @@ class TeacherSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.CustomUser
-        fields = ('id','email', 'username')
+        fields = ('id','email', 'username','picture')
 
 class TeacherInfoSerializer(ModelSerializer):
     class Meta:

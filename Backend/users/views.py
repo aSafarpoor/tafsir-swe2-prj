@@ -163,13 +163,16 @@ def multiple_section(request):
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        
+                        print("\n\n")
                         try:
 
                             r1=request.path
                             r2=request.build_absolute_uri('/')
-                            r3=r2[:-1]+r1
-                            
+                            #r3=r2[:-1]+r1
+                            r3=r2[:-1]
+                            print(r1)
+                            print(r2)
+                            print(r3)
                             file_=str(obj.file.url)
                             r3+=file_
                             temp["file"]=r3

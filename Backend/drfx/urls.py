@@ -8,7 +8,7 @@ from django.conf.urls import url
 from users.views import TeacherListView
 
 urlpatterns = [
-    #url(r'^teacher_list', TeacherListView.as_view()),
+    # url(r'^teacher_list', TeacherListView.as_view()),
     path('admin/', admin.site.urls),
     path('api/v1/', include('api.urls')),
 ]
