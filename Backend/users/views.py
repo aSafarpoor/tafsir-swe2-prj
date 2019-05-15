@@ -9,6 +9,7 @@ from . import serializers
 from course_app.models import course,question_exam
 from course_app.models import who_has_what,section
 from users.models import CustomUser
+from datetime import datetime
 class StudentListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(student=True)
     serializer_class = serializers.StudentSerializer
@@ -37,7 +38,6 @@ class JoinTable(generics.ListAPIView):
 
 
 def register(request):
-    
     if request.method=="POST":
         try:
             json_data=request.body
@@ -46,7 +46,6 @@ def register(request):
             return HttpResponse(message)
         
         data=json.loads(json_data)
-
 
         try :
             current_user = request.user
@@ -60,7 +59,6 @@ def register(request):
         else:
             message="user is not a student"
             return HttpResponse(message)
-        
         try:####################should be complete############
             is_course_exist=course.objects.filter(id=data["id"] ).exists()
            
@@ -95,21 +93,6 @@ def register(request):
     else :
         message="bad request"
         return HttpResponse(message)
-'''
-def snippet_list(request):
-    """
-    List all code snippets, or create a new snippet.
-    """
-    if request.method == 'GET':
-        snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
-        return Response(serializer.data)
-# '''
-# class JsonResponse(HttpResponse):
-#     def __init__(self, content={}, mimetype=None, status=None,
-#              content_type='application/json'):
-#         super(JsonResponse, self).__init__(json.dumps(content), mimetype=mimetype,
-#                                            status=status, content_type=content_type)
 
 def multiple_section(request):
     if request.method=='GET':
@@ -141,7 +124,7 @@ def multiple_section(request):
             whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
           
             last_pass_section=whw_obj.last_pass_section
-          
+            
             course_completed=whw_obj.course_completed
           
             enable_num=last_pass_section+1
@@ -156,23 +139,30 @@ def multiple_section(request):
             
             dict={}
             try:
+             
                 for i in range(len(query)):
                     obj=query[i]
                     if(obj.part<=enable_num):
+                        ii=obj.part-1
+                       
                         temp={}
+                        #temp["grade"]=.....##########################
+                        try:
+                            grade_=int((whw_obj.grade.split("_")[ii+1]))
+                        except:
+                            grade_=-1
+                        temp["grade"]=grade_
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        print("\n\n")
+                        
                         try:
 
                             r1=request.path
                             r2=request.build_absolute_uri('/')
                             #r3=r2[:-1]+r1
                             r3=r2[:-1]
-                            print(r1)
-                            print(r2)
-                            print(r3)
+                          
                             file_=str(obj.file.url)
                             r3+=file_
                             temp["file"]=r3
@@ -181,11 +171,14 @@ def multiple_section(request):
             
                             temp["file"]=""    
                         dict[obj.part]=temp
-                    
+                print(1111111111)        
                 #add general info:
                 temp={}
                 temp["name"]=current_course.name
                 temp["ref"]=current_course.ref
+                temp["course_is_complte"]=whw_obj.course_completed
+                temp["course_total_grade"]=whw_obj.total_grade
+                temp[ "course_finished_time"]=whw_obj.course_finished_time
                 dict[" general_info"]=temp
             except:
                 message="404"
@@ -291,6 +284,9 @@ def test(request):
                         j=summ/number_of_sections
                         j=int(j)
                         whw_obj.total_grade=j
+
+                        whw_obj. course_finished_time= datetime.now()
+
                         message="passed!!!"+" your grade is:"+str(int(c))+"\n"+"course is complete"+"your total grade is:"+str(j)
                     else:
                         message="passed!!!"+" your grade is:"+str(int(c))
