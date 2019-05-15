@@ -1,7 +1,11 @@
 from django.urls import include, path
 from django.conf.urls import url , include
-
+import os
 from . import views
+from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 urlpatterns = [   
     url(r'^teacher_list', views.TeacherListView.as_view()),
@@ -12,3 +16,10 @@ urlpatterns = [
     url(r'^parts',views.multiple_section),
     url(r'^test',views.test),
 ]
+
+
+
+if settings.DEBUG:
+  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

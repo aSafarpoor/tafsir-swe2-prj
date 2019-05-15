@@ -13,6 +13,7 @@ class StudentListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(student=True)
     serializer_class = serializers.StudentSerializer
 
+
 class TeacherListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(teacher=True)
     serializer_class = serializers.TeacherSerializer

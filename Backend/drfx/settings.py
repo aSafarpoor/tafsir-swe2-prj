@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'course_app',
+
 ]
 
 MIDDLEWARE = [
@@ -148,3 +150,19 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'tafsirqoran97@gmail.com'
 EMAIL_HOST_PASSWORD = 'kjkebxnbtybsyjyl'
+
+
+MEDIA_URL =  '/media/'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+
+
+
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings    
 
 class CustomUser(AbstractUser):
     name = models.CharField(blank=True, max_length=255)
@@ -41,7 +42,8 @@ class CustomUser(AbstractUser):
     education_type=models.CharField(null=True,blank=True,max_length=20 ,choices=ET_CHOICES)
     course_counter=models.IntegerField(default=0)
     picture=models.ImageField(null=True,blank=True,upload_to="folanja/",default="folanja/images.png")
-    
+   
+     
 
 
     def __str__(self):
