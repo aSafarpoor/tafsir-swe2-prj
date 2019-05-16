@@ -15,7 +15,8 @@ class StudentSerializer(serializers.ModelSerializer):
 class TeacherInfoSerializer(ModelSerializer):
     class Meta:
         model= models.CustomUser
-        fields=('id','picture','introduction','case_history','first_name','last_name','course_counter')
+        fields='__all__'
+        #fields=('id','picture','introduction','case_history','first_name','last_name','course_counter')
 
 
 class WhatPersonHave(ModelSerializer):

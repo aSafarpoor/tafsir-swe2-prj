@@ -22,6 +22,8 @@ class course (models.Model) :
     course_teacher=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_teacher',default=0)
     course_main_field=models.TextField(null=True,blank=True,max_length=100)
     user_counter=models.IntegerField(default=0)
+    picture=models.ImageField(null=True,blank=True,upload_to="folanja/",default="folanja/images.png")
+   
     #course_main_field=models.ForeignKey(fields,on_delete=models.CASCADE,null=True,blank=True,related_name='fk_fields1')
 
 
