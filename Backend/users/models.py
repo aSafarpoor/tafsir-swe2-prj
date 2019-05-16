@@ -3,7 +3,7 @@ from django.db import models
 from django.conf import settings    
 
 class CustomUser(AbstractUser):
-    name = models.CharField(blank=True, max_length=255)
+    #name = models.CharField(blank=True, max_length=255)
     #shomare_shenasname=models.TextField(unique=True,null=False,max_length=10,help_text="shomare shenasname",default = "") 
     teacher = models.BooleanField(null = False, default = False)
     student = models.BooleanField(null = False, default = True)
@@ -11,9 +11,11 @@ class CustomUser(AbstractUser):
     case_history=models.TextField(null=True,max_length=500,blank=True)
     first_name=models.TextField(null=False,max_length=50,blank=True)
     last_name=models.TextField(null=False,max_length=50,blank=True)
+    full_name=models.TextField(null=False,max_length=70,blank=True)
     email=models.EmailField(null=False)
     phone =models.TextField(null=True,blank=True,max_length=15)
     job =models.TextField(null=True,blank=True,max_length=150)
+    job_history=models.TextField(null=True,blank=True,max_length=3000)
     job_location=models.TextField(null=True,blank=True,max_length=250)
     home_location=models.TextField(null=True,blank=True,max_length=250)
     major=models.TextField(null=True,blank=True,max_length=150)
