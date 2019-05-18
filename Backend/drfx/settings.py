@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_auth.registration',
     'api',
-    'corsheaders',
+    # 'corsheaders',
     'users',
     'course_app',
 
@@ -56,12 +56,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -157,12 +157,12 @@ MEDIA_URL =  '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-
-
-
-
-
-
-
-
-
+# REST_AUTH_SERIALIZERS = {
+#     'USER_DETAILS_SERIALIZER': 'MainMedicaApp.serializers.serializers.UserSerializer',
+#     'PASSWORD_RESET_CONFIRM_SERIALIZER':
+#         'MainMedicaApp.serializers.auth_serializers.CustomPasswordResetConfirmSerializer',
+#     'PASSWORD_CHANGE_SERIALIZER': 'MainMedicaApp.serializers.auth_serializers.CustomPasswordChangeSerializer',
+# }
+REST_AUTH_REGISTER_SERIALIZERS = {
+     'REGISTER_SERIALIZER': 'users.serializers.regserializer',
+}
