@@ -10,6 +10,9 @@ from course_app.models import course,question_exam
 from course_app.models import who_has_what,section
 from users.models import CustomUser
 from datetime import datetime
+
+#from serializers import CourseListSerializer
+
 class StudentListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(student=True)
     serializer_class = serializers.StudentSerializer
@@ -44,17 +47,17 @@ def register(request):
         except:
             message="bad urllll"
             return HttpResponse(message)
-        
+
         data=json.loads(json_data)
 
         try :
             current_user = request.user
         #    name=current_user.name
-        
+
         except:
             message="not logged in"
             return HttpResponse(message)
-        
+
         if current_user.student==True:
             pass
         else:
@@ -62,23 +65,23 @@ def register(request):
             return HttpResponse(message)
         try:####################should be complete############
             is_course_exist=course.objects.filter(id=data["id"] ).exists()
-           
+
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
             current_course=course.objects.filter(id=data["id"] )[0]
             try:
-                
+
                 is_exist=who_has_what.objects.filter(course_user=current_user , course_name=current_course ).exists()
-    
+
                 if(is_exist==True):
                     message="registered before"
                     return HttpResponse(message)
-                
+
             except:
                     message="bad request"
                     return HttpResponse(message)
-                    
+
             obj=who_has_what()
             obj.course_user=current_user
             obj.course_name=current_course
@@ -90,7 +93,7 @@ def register(request):
         except:
             message="not_enough_data"
             return HttpResponse(message)
-       
+
     else :
         message="bad request"
         return HttpResponse(message)
@@ -121,13 +124,13 @@ def multiple_section(request):
             if(is_registered==False):
                 message="not registered"
                 return HttpResponse(message)
-          
+
             whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
-          
+
             last_pass_section=whw_obj.last_pass_section
-            
+
             course_completed=whw_obj.course_completed
-          
+
             enable_num=last_pass_section+1
             if(course_completed):
                 enable_num-=1
@@ -136,8 +139,8 @@ def multiple_section(request):
                 query=section.objects.filter(course=current_course)
             except:
                 message="bed request!!!"
-                return HttpResponse(message) 
-            
+                return HttpResponse(message)
+
             dict={}
             try:
                 session_list=[]
@@ -145,7 +148,7 @@ def multiple_section(request):
                     obj=query[i]
                     if(obj.part<=enable_num):
                         ii=obj.part-1
-                       
+
                         temp={}
                         #temp["grade"]=.....##########################
                         try:
@@ -162,17 +165,17 @@ def multiple_section(request):
                             r2=request.build_absolute_uri('/')
                             #r3=r2[:-1]+r1
                             r3=r2[:-1]
-                          
+
                             file_=str(obj.file.url)
                             r3+=file_
                             temp["file"]=r3
-                            
+
                         except:
-            
-                            temp["file"]=""    
+
+                            temp["file"]=""
                         #dict[obj.part]=temp
                         session_list.append(temp)
-                        
+
                 print(session_list)
                 dict["sessions"]=session_list
                 print("fffffff")
@@ -187,8 +190,8 @@ def multiple_section(request):
             except:
                 message="404"
                 return HttpResponse(message)
-          
-            
+
+
             return JsonResponse(dict)
 
         except:
@@ -198,11 +201,11 @@ def multiple_section(request):
     return HttpResponse(message)
 
 def test(request):
-    
+
     if request.method=="POST":
         try:
             json_data=request.body
-        
+
         except:
             message="bad url"
             return HttpResponse(message)
@@ -215,13 +218,13 @@ def test(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        
+
         if current_user.student==True:
             pass
         else:
             message="user is not a student"
             return HttpResponse(message)
-        
+
         try:
             is_exist=course.objects.filter(id=data["course_id"]).exists()
             if(is_exist==False):
@@ -231,20 +234,20 @@ def test(request):
         except:
             message="not enough data"
             return HttpResponse(message)
-        
+
         try:
             is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
 
             if(is_registered==False):
                 message="not registered"
                 return HttpResponse(message)
-        
+
             whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
         except:
             message="not enough data"
             return HttpResponse(message)
 
-        try: 
+        try:
             part_num=data["part"]
             is_exist=section.objects.filter(part=part_num , course=current_course).exists()
             if(is_exist==False):
@@ -261,15 +264,15 @@ def test(request):
             true_counter=0
             for i in range(1,counter+1):
                 num=i
-                
+
                 q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
                 choice=data[str(num)]
                 true_choice=q_obj.true_choice
-                
+
                 if(choice==true_choice):
                     true_counter+=1
             c=int(true_counter*100/counter)
-          
+
             if(c>70):
                 if(whw_obj.last_pass_section+1==current_section.part):
                     whw_obj.last_pass_section+=1
@@ -306,7 +309,7 @@ def test(request):
                 else:
                     message="not excepted session!!!"
                     return HttpResponse(message)
-                
+
             else:
                 message="failed!!!"+"your geade is:"+str(c)
                 return HttpResponse(message)
@@ -332,8 +335,8 @@ def test(request):
 }
 
 '''
-        
-        
+
+
 
 
 
@@ -358,10 +361,10 @@ def get_own_course_info(request):
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
-            
+
             current_course=course.objects.filter(id=requested_id)[0]
 
-            
+
             if(current_course.course_teacher==current_user):
                 pass
 
@@ -369,42 +372,42 @@ def get_own_course_info(request):
                 message="not owner"
                 return HttpResponse(message)
             #enable num is always enable
-            
+
             try:
                 is_exist=section.objects.filter(course=current_course).exists()
                 query=section.objects.filter(course=current_course)
             except:
                 message="bed request!!!"
-                return HttpResponse(message) 
-            
+                return HttpResponse(message)
+
             dict={}
             try:
-             
+
                 for i in range(len(query)):
                     obj=query[i]
                     if(True):
                         ii=obj.part-1
-                       
+
                         temp={}
-                        
+
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        
+
                         try:
 
                             r1=request.path
                             r2=request.build_absolute_uri('/')
                             #r3=r2[:-1]+r1
                             r3=r2[:-1]
-                          
+
                             file_=str(obj.file.url)
                             r3+=file_
                             temp["file"]=r3
-                            
+
                         except:
-            
-                            temp["file"]=""    
+
+                            temp["file"]=""
 
                         #each section has some question_exams:
 
@@ -414,14 +417,14 @@ def get_own_course_info(request):
                         except:
                             pass
 
-                         
+
                         for i in range(len(q_query)):
                             q_object=q_query[i]
-                            
+
                             ii=q_object.number
-                        
+
                             q_temp={}
-                            
+
                             q_temp["number"]=ii
                             q_temp["question"]=q_object.question
                             q_temp["choice1"]=q_object.choice1
@@ -429,36 +432,36 @@ def get_own_course_info(request):
                             q_temp["choice3"]=q_object.choice3
                             q_temp["choice4"]=q_object.choice4
                             q_temp["true_choice"]=q_object.true_choice
-                            
+
                             question_num="q_num_"+str(ii)
-                            temp[question_num]=q_temp  
+                            temp[question_num]=q_temp
 
 
                         dict[obj.part]=temp
-       
+
                 #add general info:
-                temp={} 
+                temp={}
                 temp["name"]=current_course.name
-                
-                temp["summary"]=current_course.summary                    
+
+                temp["summary"]=current_course.summary
                 temp["pre_movie"]=current_course.pre_movie
                 temp["Headlines"]=current_course.Headlines
-              
+
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
                 temp["ref"]=current_course.ref
-                temp["price"]=current_course.price   
+                temp["price"]=current_course.price
                 #temp["course_teacher"]=current_user
                 temp["course_main_field"]=current_course.course_main_field
 
-  
+
 
 
                 dict["general_info"]=temp
             except:
                 message="404"
                 return HttpResponse(message)
-          
+
             return JsonResponse(dict)
 
         except:
@@ -489,10 +492,10 @@ def get_own_course_info(request):
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
-            
+
             current_course=course.objects.filter(id=requested_id)[0]
 
-            
+
             if(current_course.course_teacher==current_user):
                 pass
 
@@ -500,42 +503,42 @@ def get_own_course_info(request):
                 message="not owner"
                 return HttpResponse(message)
             #enable num is always enable
-            
+
             try:
                 is_exist=section.objects.filter(course=current_course).exists()
                 query=section.objects.filter(course=current_course)
             except:
                 message="bed request!!!"
-                return HttpResponse(message) 
-            
+                return HttpResponse(message)
+
             dict={}
             try:
-             
+
                 for i in range(len(query)):
                     obj=query[i]
                     if(True):
                         ii=obj.part-1
-                       
+
                         temp={}
-                        
+
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        
+
                         try:
 
                             r1=request.path
                             r2=request.build_absolute_uri('/')
-                         
+
                             r3=r2[:-1]
-                          
+
                             file_=str(obj.file.url)
                             r3+=file_
                             temp["file"]=r3
-                            
+
                         except:
-            
-                            temp["file"]=""    
+
+                            temp["file"]=""
 
                         #each section has some question_exams:
 
@@ -545,14 +548,14 @@ def get_own_course_info(request):
                         except:
                             pass
 
-                         
+
                         for i in range(len(q_query)):
                             q_object=q_query[i]
-                            
+
                             ii=q_object.number
-                        
+
                             q_temp={}
-                            
+
                             q_temp["number"]=ii
                             q_temp["question"]=q_object.question
                             q_temp["choice1"]=q_object.choice1
@@ -560,36 +563,36 @@ def get_own_course_info(request):
                             q_temp["choice3"]=q_object.choice3
                             q_temp["choice4"]=q_object.choice4
                             q_temp["true_choice"]=q_object.true_choice
-                            
+
                             question_num="q_num_"+str(ii)
-                            temp[question_num]=q_temp  
+                            temp[question_num]=q_temp
 
 
                         dict[obj.part]=temp
-   
+
                 #add general info:
-                temp={} 
+                temp={}
                 temp["name"]=current_course.name
-                
-                temp["summary"]=current_course.summary                    
+
+                temp["summary"]=current_course.summary
                 temp["pre_movie"]=current_course.pre_movie
                 temp["Headlines"]=current_course.Headlines
-             
+
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
                 temp["ref"]=current_course.ref
-                temp["price"]=current_course.price   
+                temp["price"]=current_course.price
                 #temp["course_teacher"]=current_user
                 temp["course_main_field"]=current_course.course_main_field
 
-  
+
 
 
                 dict["general_info"]=temp
             except:
                 message="404"
                 return HttpResponse(message)
-          
+
             return JsonResponse(dict)
 
         except:
@@ -606,17 +609,17 @@ def course_counter(request):
         except:
             message="not available user"
             return HttpResponse(message)
-    
+
         try:
             dict={}
             is_exist=who_has_what.objects.filter(course_user=current_user).exists()
-    
+
             if(is_exist==False):
                 dict["registered"]=[]
                 dict["passed"]=[]
                 dict["registered_count"]=0
                 dict["passed_count"]=0
-                
+
             else:
                 reg_list=[]
                 passed_list=[]
@@ -632,8 +635,8 @@ def course_counter(request):
                 dict["passed"]=passed_list
                 dict["registered_count"]=len(reg_list)
                 dict["passed_count"]=len(passed_list)
-            
-            
+
+
             return JsonResponse(dict)
         except:
 
@@ -641,4 +644,31 @@ def course_counter(request):
             return HttpResponse(message)
     message="404"
     return HttpResponse(message)
-        
+
+
+
+
+def create(request):
+
+    if request.method=="POST":
+        try:
+            json_data=request.body
+        except:
+            message="bad urllll"
+            return HttpResponse(message)
+
+        data=json.loads(json_data)
+        try:
+
+            user_obj=CustomUser()
+            user_obj.first_name=data["first_name"]
+            user_obj.save()
+            message="created"
+            return HttpResponse(message)
+        except:
+            message="not_enough_data"
+            return HttpResponse(message)
+
+    else :
+        message="bad request"
+        return HttpResponse(message)
