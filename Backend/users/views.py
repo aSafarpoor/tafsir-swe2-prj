@@ -141,7 +141,6 @@ def multiple_section(request):
             dict={}
             try:
                 session_list=[]
-                print("zzzzzz")
                 for i in range(len(query)):
                     obj=query[i]
                     if(obj.part<=enable_num):
@@ -157,7 +156,6 @@ def multiple_section(request):
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
-                        print(1111111111111111)
                         try:
 
                             r1=request.path
@@ -173,7 +171,6 @@ def multiple_section(request):
             
                             temp["file"]=""    
                         #dict[obj.part]=temp
-                        print(222222222222222)
                         session_list.append(temp)
                         
                 print(session_list)
@@ -438,8 +435,7 @@ def get_own_course_info(request):
 
 
                         dict[obj.part]=temp
-
-                print(1111111111)        
+       
                 #add general info:
                 temp={} 
                 temp["name"]=current_course.name
@@ -447,7 +443,7 @@ def get_own_course_info(request):
                 temp["summary"]=current_course.summary                    
                 temp["pre_movie"]=current_course.pre_movie
                 temp["Headlines"]=current_course.Headlines
-                print("ddd")
+              
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
                 temp["ref"]=current_course.ref
@@ -463,11 +459,9 @@ def get_own_course_info(request):
                 message="404"
                 return HttpResponse(message)
           
-            print("dict is:  ",dict)
             return JsonResponse(dict)
 
         except:
-            print("ccccc")
             message="404"
             return HttpResponse(message)
     message="404"
@@ -532,7 +526,7 @@ def get_own_course_info(request):
 
                             r1=request.path
                             r2=request.build_absolute_uri('/')
-                            #r3=r2[:-1]+r1
+                         
                             r3=r2[:-1]
                           
                             file_=str(obj.file.url)
@@ -572,8 +566,7 @@ def get_own_course_info(request):
 
 
                         dict[obj.part]=temp
-
-                print(1111111111)        
+   
                 #add general info:
                 temp={} 
                 temp["name"]=current_course.name
@@ -581,7 +574,7 @@ def get_own_course_info(request):
                 temp["summary"]=current_course.summary                    
                 temp["pre_movie"]=current_course.pre_movie
                 temp["Headlines"]=current_course.Headlines
-                print("ddd")
+             
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
                 temp["ref"]=current_course.ref
@@ -597,12 +590,55 @@ def get_own_course_info(request):
                 message="404"
                 return HttpResponse(message)
           
-            print("dict is:  ",dict)
             return JsonResponse(dict)
 
         except:
-            print("ccccc")
             message="404"
             return HttpResponse(message)
     message="404"
     return HttpResponse(message)
+
+def course_counter(request):
+    if request.method=='GET':
+        print("hello")
+        try:
+            current_user=request.user
+        except:
+            message="not available user"
+            return HttpResponse(message)
+    
+        try:
+            dict={}
+            is_exist=who_has_what.objects.filter(course_user=current_user).exists()
+    
+            if(is_exist==False):
+                dict["registered"]=[]
+                dict["passed"]=[]
+                dict["registered_count"]=0
+                dict["passed_count"]=0
+                
+            else:
+                reg_list=[]
+                passed_list=[]
+                query=who_has_what.objects.filter(course_user=current_user)
+                for obj in query:
+                    if(obj.course_completed==True):
+                        reg_list.append(obj.course_name.name)
+                        passed_list.append(obj.course_name.name)
+                    else:
+                        reg_list.append(obj.course_name.name)
+
+                dict["registered"]=reg_list
+                dict["passed"]=passed_list
+                dict["registered_count"]=len(reg_list)
+                dict["passed_count"]=len(passed_list)
+            
+            
+            return JsonResponse(dict)
+        except:
+
+            message="404"
+            return HttpResponse(message)
+    message="404"
+    return HttpResponse(message)
+        

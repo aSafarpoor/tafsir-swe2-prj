@@ -28,7 +28,7 @@ def create(request):
 
         try :
             current_user = request.user
-            name=current_user.name
+            # name=current_user.name
         except:
             message="not logged in"
             return HttpResponse(message)
@@ -166,7 +166,7 @@ def edit(request):
 
         try :
             current_user = request.user
-            name=current_user.name
+            # name=current_user.name
         except:
             message="not logged in"
             return HttpResponse(message)
