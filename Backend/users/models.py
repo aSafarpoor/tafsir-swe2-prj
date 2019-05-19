@@ -13,7 +13,7 @@ class CustomUser(AbstractUser):
     last_name=models.TextField(null=False,max_length=50,blank=True)
     full_name=models.TextField(null=False,max_length=70,blank=True)
     email=models.EmailField(null=False)
-    phone_number =models.TextField(null=True,blank=True,max_length=15)
+    phone_number =models.TextField(null=True,blank=True,max_length=15, default = "0")
     job =models.TextField(null=True,blank=True,max_length=150)
     job_history=models.TextField(null=True,blank=True,max_length=3000)
     job_location=models.TextField(null=True,blank=True,max_length=250)
