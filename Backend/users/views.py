@@ -10,6 +10,9 @@ from course_app.models import course,question_exam
 from course_app.models import who_has_what,section
 from users.models import CustomUser
 from datetime import datetime
+from rest_auth.views import LoginView
+
+
 
 #from serializers import CourseListSerializer
 
@@ -656,16 +659,21 @@ def create(request):
         except:
             message="bad urllll"
             return HttpResponse(message)
-
-        data=json.loads(json_data)
+        print(1111111111111)
+        data=json.loads(json_data.decode())
+        print(222222222222)
         try:
-
+            print(222222222222)
             user_obj=CustomUser()
+            print(33333333333333333333333)
             user_obj.first_name=data["first_name"]
+            print(444444444444444444)
             user_obj.save()
             message="created"
+            print(5555555555555)
             return HttpResponse(message)
         except:
+            print(6666666666666)
             message="not_enough_data"
             return HttpResponse(message)
 
