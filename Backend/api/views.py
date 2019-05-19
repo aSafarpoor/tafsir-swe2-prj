@@ -9,8 +9,21 @@ class CustomLoginView(LoginView):
 #         }
     def get_response(self):
         orginal_response = super().get_response()
-        mydata = {"teacher": self.user.teacher,
-            "student" : self.user.student
+        teacher = self.user.teacher
+        student =  self.user.student
+
+        if teacher == True and student == True:
+            user = "student and teacher"
+
+        if teacher and not student:
+            user = "teacher"
+
+        if not teacher and student:
+            user = "student"
+        if not teacher and not student :
+            user = "nothing"
+
+        mydata = {"user type": user,
         }
         orginal_response.data.update(mydata)
         return orginal_response
