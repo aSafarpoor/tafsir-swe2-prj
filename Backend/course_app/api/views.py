@@ -15,7 +15,7 @@ class CourseListAPIview(generics.ListAPIView):
 
 
 def create(request):
-    
+    # print("\nhellooooo\n\n\n")
     if request.method=="POST":
         try:
             json_data=request.body
@@ -24,7 +24,7 @@ def create(request):
             return HttpResponse(message)
         
         data=json.loads(json_data)
-
+        # print("\n\n\n\ndata is:",data,"\n\n\n\n")
 
         try :
             current_user = request.user

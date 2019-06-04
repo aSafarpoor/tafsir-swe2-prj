@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
+from image_file_test.models import image_file
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 from course_app.models import course,section
@@ -17,3 +18,4 @@ admin.site.register(course)
 admin.site.register(question_exam)
 admin.site.register(section)
 admin.site.register(who_has_what)
+admin.site.register(image_file)

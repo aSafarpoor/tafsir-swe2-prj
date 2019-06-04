@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     # 'corsheaders',
     'users',
     'course_app',
+    'image_file_test',
 
 ]
 
