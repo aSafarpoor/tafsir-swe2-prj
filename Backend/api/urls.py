@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('users/', include('users.urls')),
     path('course/', include('course_app.api.urls')),
+    path('aboutus/', include('aboutus_app.api.urls')),
     path('imfi/', include('image_file_test.api.urls')),
     path('rest-auth/', include('rest_auth.urls')),
     path('login/', views.CustomLoginView.as_view()),
