@@ -11,8 +11,9 @@ from course_app.models import who_has_what,section
 from users.models import CustomUser
 from datetime import datetime
 from rest_auth.views import LoginView
+from raw_certificate_maker_should_be_embeded.certificate import make_certificate 
 
-
+from PIL import Image
 
 #from serializers import CourseListSerializer
 
@@ -606,7 +607,7 @@ def get_own_course_info(request):
 
 def course_counter(request):
     if request.method=='GET':
-        print("hello")
+        # print("hello")
         try:
             current_user=request.user
         except:
@@ -659,24 +660,95 @@ def create(request):
         except:
             message="bad urllll"
             return HttpResponse(message)
-        print(1111111111111)
         data=json.loads(json_data.decode())
-        print(222222222222)
         try:
-            print(222222222222)
             user_obj=CustomUser()
-            print(33333333333333333333333)
+            
             user_obj.first_name=data["first_name"]
-            print(444444444444444444)
+            
             user_obj.save()
             message="created"
-            print(5555555555555)
+            
             return HttpResponse(message)
         except:
-            print(6666666666666)
+            
             message="not_enough_data"
             return HttpResponse(message)
 
     else :
         message="bad request"
         return HttpResponse(message)
+
+
+
+def ask_crtification(request):
+    if request.method=='GET':
+        if 's' in request.GET:
+            course_id=int(request.GET['s'])
+        # print("hello")
+        try:
+            current_user=request.user
+            print(current_user)
+        except:
+            message="not available user"
+            return HttpResponse(message)
+        
+        if(current_user.student==False):
+            message="not student"
+            return HttpResponse(message)
+
+        try:
+            is_exist=course.objects.filter(id=course_id).exists()
+            if(is_exist==False):
+                message="not find course"
+                return HttpResponse(message)
+            current_course=course.objects.filter(id=course_id)[0]
+        except:
+            message="not enough data"
+            return HttpResponse(message)
+
+        try:
+            is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
+
+            if(is_registered==False):
+                message="not registered"
+                return HttpResponse(message)
+
+            whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
+        except:
+            message="not enough data"
+            return HttpResponse(message)
+
+        try:
+            if(whw_obj.course_completed):
+
+                first_name=current_user.first_name
+
+                last_name=current_user.last_name
+
+                passed_day=whw_obj.course_finished_time
+                # print(passed_day)
+                course_name=current_course.name
+
+                teacher_name=current_course.course_teacher.full_name
+                print("complete informations")
+                adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
+                print(type(adrs))
+                # image=Image.open(adrs)
+                image=Image.open("raw_certificate_maker_should_be_embeded/images.jpeg")
+                print(type(image))
+                dict={}
+                dict["certificate"]=image
+                print(111111111111)
+                return JsonResponse(dict)
+            else:
+                message="course not finished yet"
+                return HttpResponse(message)
+        except:
+            message="fucked"
+            return HttpResponse(message)
+    else:
+        message="bad request"
+        return HttpResponse(message)
+
+

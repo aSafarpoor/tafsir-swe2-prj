@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^test',views.test),
     url(r'^course_info',views.get_own_course_info),
     url(r'^course_counter',views.course_counter),
-
+    url(r'^ask_certification',views.ask_crtification),
 
 ]
 
