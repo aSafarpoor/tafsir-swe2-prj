@@ -12,7 +12,8 @@ from users.models import CustomUser
 from datetime import datetime
 from rest_auth.views import LoginView
 from raw_certificate_maker_should_be_embeded.certificate import make_certificate 
-
+import datetime
+from persiantools.jdatetime import JalaliDate
 from PIL import Image
 
 #from serializers import CourseListSerializer
@@ -296,7 +297,8 @@ def test(request):
                         j=int(j)
                         whw_obj.total_grade=j
 
-                        whw_obj. course_finished_time= datetime.now()
+                        # whw_obj. course_finished_time= datetime.now()
+                        whw_obj.course_finished_time=str(JalaliDate.today())
 
                         message="passed!!!"+" your grade is:"+str(int(c))+"\n"+"course is complete"+"your total grade is:"+str(j)
                     else:
@@ -731,22 +733,14 @@ def ask_crtification(request):
                 course_name=current_course.name
 
                 teacher_name=current_course.course_teacher.full_name
-                print("complete informations")
+                # print("complete informations")
                 adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
-                # print(type(adrs))
-                # print("22222222222222222222222222")
-                # image=Image.open(adrs)
-                image=Image.open("raw_certificate_maker_should_be_embeded/images.jpeg")
-                # print(type(image))
+                
                 domain = request.get_host()
-                # print("domain is: ",domain)
                 adrs=domain+"/"+adrs
                 dict={}
                 dict["certificate"]=adrs
                 
-                print(111111111111)
-                print(dict)
-
                 return JsonResponse(dict)
                 
             else:
