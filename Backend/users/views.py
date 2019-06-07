@@ -733,14 +733,22 @@ def ask_crtification(request):
                 teacher_name=current_course.course_teacher.full_name
                 print("complete informations")
                 adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
-                print(type(adrs))
+                # print(type(adrs))
+                # print("22222222222222222222222222")
                 # image=Image.open(adrs)
                 image=Image.open("raw_certificate_maker_should_be_embeded/images.jpeg")
-                print(type(image))
+                # print(type(image))
+                domain = request.get_host()
+                # print("domain is: ",domain)
+                adrs=domain+"/"+adrs
                 dict={}
-                dict["certificate"]=image
+                dict["certificate"]=adrs
+                
                 print(111111111111)
+                print(dict)
+
                 return JsonResponse(dict)
+                
             else:
                 message="course not finished yet"
                 return HttpResponse(message)

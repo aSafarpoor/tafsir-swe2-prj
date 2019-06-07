@@ -51,7 +51,7 @@ def make_certificate(first_name,last_name,passed_day,course_name,teacher_name):
     draw = ImageDraw.Draw(image)
 
     name=str(randint(1,99999999999))+".pdf"
-    adrs="raw_certificate_maker_should_be_embeded/media/"+name
+    adrs="media/folanja/certificate/"+name
     # save it
     # image.save("raw_certificate_maker_should_be_embeded/media/output.png",resolution=100.0)
     image.save(adrs,resolution=100.0)
