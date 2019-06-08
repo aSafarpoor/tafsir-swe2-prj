@@ -723,31 +723,30 @@ def ask_crtification(request):
 
         try:
             if(whw_obj.course_completed):
-
                 first_name=current_user.first_name
-
+                pic=current_user.picture
                 last_name=current_user.last_name
 
                 passed_day=whw_obj.course_finished_time
                 # print(passed_day)
                 course_name=current_course.name
-
+      
                 teacher_name=current_course.course_teacher.full_name
                 # print("complete informations")
-                adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
+                adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pic)
                 
                 domain = request.get_host()
                 adrs=domain+"/"+adrs
                 dict={}
                 dict["certificate"]=adrs
-                
+                               
                 return JsonResponse(dict)
                 
             else:
                 message="course not finished yet"
                 return HttpResponse(message)
         except:
-            message="fucked"
+            message="bad happend"
             return HttpResponse(message)
     else:
         message="bad request"

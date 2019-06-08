@@ -36,4 +36,6 @@ def create0(request):
         
         message="nokey"
         return HttpResponse(message)
-
+    else:
+        message="bad request"
+        return HttpResponse(message)

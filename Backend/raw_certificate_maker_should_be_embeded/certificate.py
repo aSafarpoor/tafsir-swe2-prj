@@ -16,30 +16,27 @@ from PIL import Image
 from PIL import ImageDraw
 from random import randint
 
-def make_certificate(first_name,last_name,passed_day,course_name,teacher_name):
-    
-    fontFile = "raw_certificate_maker_should_be_embeded/TAHOMAB0.TTF"
+def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pic):
+   
+    fontFile = "raw_certificate_maker_should_be_embeded/B Koodak Bold.ttf"
    
     # this was a 400x400 jpg file
     # imageFile = "tmp.png"
-
-    imageFile="raw_certificate_maker_should_be_embeded/images.jpeg"
-
+    print("hello")
+    # imageFile="raw_certificate_maker_should_be_embeded/images2.jpeg"
+    imageFile="raw_certificate_maker_should_be_embeded/images.jpg"
     # load the font and image
-    font = ImageFont.truetype(fontFile, 18)
-
+    
+    font = ImageFont.truetype(fontFile, 66)
+    
     image = Image.open(imageFile)
+    
+    text="\n"*32+" گواهی میشود آقا/خانم "+first_name+" "+last_name+" "*(178-(23+len(first_name)+len(last_name)))
+    text+="\n\n"+" دوره "+course_name+" "+" "*(193-len(course_name)-6)
+    text+="\n\n"+" ارائه شده توسط "+teacher_name+ " "*(155-len(teacher_name))
+    text+="\n"*2+" را در تاریخ "+str(passed_day[1:-1])+" "*(162)
+    text+="\n\n"+"با موفقیت گذرانده است"+"."+" "*165
 
-    # firts you must prepare your text (you dont need this for english text)
-    #text =  "\n\n"+"        "+first_name+" "+last_name+"\n      "+passed_day+"\n        "+course_name+"\n       "+teacher_name
-
-    text="\n"*11+first_name+ " "+last_name+" "*(140-2*(len(first_name)+len(last_name)))
-
-    text+="\n"*3+course_name+" "*(200-2*(len(course_name)))
-    text+="\n"*3+teacher_name+" "*(180-2*(len(teacher_name)))
-    print("lol")
-    text+="\n"*3+str(passed_day)+" "*(160)
-   
     reshaped_text = arabic_reshaper.reshape(text)    # correct its shape
     bidi_text = get_display(reshaped_text)           # correct its direction
 
@@ -49,12 +46,26 @@ def make_certificate(first_name,last_name,passed_day,course_name,teacher_name):
     draw = ImageDraw.Draw(image)
     draw.text((0,0), bidi_text, (255,0,255), font=font)
     draw = ImageDraw.Draw(image)
+    
+    image2 = Image.open(pic)
+    
+    image2 = image2.resize( (380,500), Image.ANTIALIAS) 
+    # img = Image.open('/path/to/file'?, 'r')
+    img_w, img_h = image2.size
+    background = image#Image.new('RGBA', (1440, 900), (255, 255, 255, 255))
+    bg_w, bg_h = background.size
+    offset = ((bg_w - img_w) // 9, (bg_h - img_h) // 3)
+    background.paste(image2, offset)
+    # background.save('outttt.png')
 
     name=str(randint(1,99999999999))+".pdf"
     adrs="media/folanja/certificate/"+name
     # save it
+    print(pic)
+
     # image.save("raw_certificate_maker_should_be_embeded/media/output.png",resolution=100.0)
     image.save(adrs,resolution=100.0)
+    
     return adrs
     # imageFile="raw_certificate_maker_should_be_embeded/media/output.pdf"
     
