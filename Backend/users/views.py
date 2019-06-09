@@ -151,7 +151,7 @@ def multiple_section(request):
                 session_list=[]
                 for i in range(len(query)):
                     obj=query[i]
-                    if(obj.part<=enable_num):
+                    if(obj.part-1<=enable_num):
                         ii=obj.part-1
 
                         temp={}
@@ -162,6 +162,7 @@ def multiple_section(request):
                             grade_=-1
                         temp["grade"]=grade_
                         temp["part"]=obj.part
+                        temp["id"]=obj.id
                         temp["name"]=obj.name
                         temp["movie"]=obj.movie
                         try:
@@ -478,7 +479,7 @@ def get_own_course_info(request):
 
 
 
-def get_own_course_info(request):
+def get_own_course_info2(request):
     if request.method=='GET':
         if 's' in request.GET:
             requested_id=int(request.GET['s'])
@@ -753,3 +754,98 @@ def ask_crtification(request):
         return HttpResponse(message)
 
 
+
+def return_section_test(request):
+    if request.method=='GET':
+        if 's' in request.GET:
+            section_id=int(request.GET['s'])
+        else:
+            message="bad request"
+            return HttpResponse(message)
+        try:
+            current_user=request.user
+        except:
+            message="not available user"
+            return HttpResponse(message)
+        try:
+            # who_has_what
+            
+            is_section_exist=section.objects.filter(id=section_id).exists()
+            
+            if(is_section_exist==False):
+                message="not eanble course"
+                return HttpResponse(message)
+            
+            current_section=section.objects.filter(id=section_id)[0]
+            current_course=current_section.course
+            try:
+                # print(current_user.first_name[::-1],"                  ----            ",currunt_course.name[::-1])
+
+
+                is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
+
+                if(is_registered==False):
+                    message="not registered"
+                    return HttpResponse(message)
+
+                whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
+            except:
+                message="not enough data"
+                return HttpResponse(message)
+           
+            last_pass_section=whw_obj.last_pass_section
+
+            course_completed=whw_obj.course_completed
+
+            enable_num=last_pass_section+1
+            if(course_completed):
+                enable_num-=1
+            try:
+                # is_exist=question_exam.objects.filter(section=current_section).exists()
+                query=question_exam.objects.filter(which_section=current_section)
+            except:
+                message="bed request!!!"
+                return HttpResponse(message)
+
+            
+            dict={}
+            try:
+                q_list=[]
+                for i in range(len(query)):
+                    obj=query[i]
+                    if(current_section.part-1==enable_num):
+                        
+
+                        temp={}
+                       
+
+                        temp={}
+                        temp["course_id"]=current_course.id 
+                        temp["section_part"]=obj.which_section.part
+                        temp["number"]=obj.number
+                        temp["question"]=obj.question
+                        temp["choice1"]=obj.choice1
+                        temp["choice2"]=obj.choice2
+                        temp["choice3"]=obj.choice3
+                        temp["choice4"]=obj.choice4
+
+
+                        q_list.append(temp)
+
+                # print(session_list)
+                dict["q_list"]=q_list
+                # print("fffffff")
+                #add general info:
+                
+            except:
+                message="404"
+                return HttpResponse(message)
+
+
+            return JsonResponse(dict)
+
+        except:
+            message="404"
+            return HttpResponse(message)
+    message="404"
+    return HttpResponse(message)
