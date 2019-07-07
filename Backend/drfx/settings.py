@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'users',
     'course_app',
     'image_file_test',
-    'aboutus_app',
+    'aboutus_app',	
     
 ]
 
@@ -92,11 +92,23 @@ WSGI_APPLICATION = 'drfx.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+'''
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'test',
+        'USER': 'dbuser',
+        'PASSWORD': '123123',
+        'HOST': 'localhost',
+        'PORT':'',
     }
 }
 
