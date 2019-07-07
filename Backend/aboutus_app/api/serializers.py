@@ -2,14 +2,14 @@ from rest_framework.serializers import ModelSerializer
 
 from aboutus_app.models import aboutus
 
-class CreateSerializer(ModelSerializer):
-    class Meta:
-        model=aboutus
-        fields='__all__'
-class EditSerializer(ModelSerializer):
-    class Meta:
-        model=aboutus
-        fields='__all__'
+# class CreateSerializer(ModelSerializer):
+#     class Meta:
+#         model=aboutus
+#         fields='__all__'
+# class EditSerializer(ModelSerializer):
+#     class Meta:
+#         model=aboutus
+#         fields='__all__'
         
 
 class ListSerializer(ModelSerializer):

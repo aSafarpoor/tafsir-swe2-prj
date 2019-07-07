@@ -2,18 +2,19 @@ from rest_framework import generics
 
 from django.http import HttpResponse
 from aboutus_app.models import aboutus
-from  .serializers import CreateSerializer,ListSerializer,EditSerializer
+# from  .serializers import CreateSerializer,ListSerializer,EditSerializer
+from  .serializers import ListSerializer
 import json
 from rest_framework.decorators import api_view
 
-class CreateAPIview(generics.CreateAPIView):
-    queryset = aboutus.objects.all()
-    serializer_class = CreateSerializer
+# class CreateAPIview(generics.CreateAPIView):
+#     queryset = aboutus.objects.all()
+#     serializer_class = CreateSerializer
 
-class EditAPIview(generics.RetrieveUpdateAPIView):#     CreateAPIView):
-    lookup_field = 'id'
-    queryset = aboutus.objects.all()
-    serializer_class = EditSerializer
+# class EditAPIview(generics.RetrieveUpdateAPIView):#     CreateAPIView):
+#     lookup_field = 'id'
+#     queryset = aboutus.objects.all()
+#     serializer_class = EditSerializer
 
 class ListAPIview(generics.ListAPIView):
     queryset = aboutus.objects.all()

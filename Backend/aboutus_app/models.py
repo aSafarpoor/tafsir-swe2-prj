@@ -10,6 +10,6 @@ from users.models import CustomUser as t_model
 class aboutus (models.Model) : 
     title=models.TextField(null=False,max_length=50,default="no_Name")
     explanation=models.TextField(null=False,max_length=500,default="no_Name")
-    file=models.FileField(null=True,blank=True,upload_to="folanja/aboutus",default="folanja/images.png")
+    # file=models.FileField(null=True,blank=True,upload_to="folanja/aboutus",default="folanja/images.png")
      
    
