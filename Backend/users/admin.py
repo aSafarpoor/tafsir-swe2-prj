@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from image_file_test.models import image_file
+from image_file_test.models import image_file,movie_link
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 from aboutus_app.models import aboutus,contactus,news
@@ -22,4 +22,5 @@ admin.site.register(who_has_what)
 admin.site.register(image_file)
 admin.site.register(aboutus)
 admin.site.register(news)
+admin.site.register(movie_link)
 admin.site.register(contactus)

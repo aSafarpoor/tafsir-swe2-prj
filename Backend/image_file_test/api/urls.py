@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^create1',views.create1.as_view()),
     url(r'^create0',views.create0),
     url(r'^call',views.call),
+    url(r'^gmi',views.get_movie_id),
     url(r'^list',views.ListAPIview.as_view()),
     
 ]
