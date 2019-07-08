@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from aboutus_app.models import aboutus
+from aboutus_app.models import aboutus,contactus,news
 
 # class CreateSerializer(ModelSerializer):
 #     class Meta:
@@ -15,6 +15,17 @@ from aboutus_app.models import aboutus
 class ListSerializer(ModelSerializer):
     class Meta:
         model=aboutus
+        fields='__all__'
+
+
+class contactSerializer(ModelSerializer):
+    class Meta:
+        model=contactus
+        fields='__all__'
+
+class newsSerializer(ModelSerializer):
+    class Meta:
+        model=news
         fields='__all__'
 
 

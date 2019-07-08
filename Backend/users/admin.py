@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from image_file_test.models import image_file
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
-from aboutus_app.models import aboutus
+from aboutus_app.models import aboutus,contactus,news
 from course_app.models import course,section
 from course_app.models import who_has_what,question_exam
 #class CustomUserAdmin(UserAdmin):
@@ -21,3 +21,5 @@ admin.site.register(section)
 admin.site.register(who_has_what)
 admin.site.register(image_file)
 admin.site.register(aboutus)
+admin.site.register(news)
+admin.site.register(contactus)
