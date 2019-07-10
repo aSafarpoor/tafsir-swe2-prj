@@ -4,6 +4,9 @@ from course_app.models import course,section,question_exam
 from  .serializers import CourseListSerializer
 import json
 from django.http import HttpResponse
+import requests
+from django.shortcuts import render
+
 
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
@@ -151,6 +154,39 @@ def create(request):
 }'''
 ####################################
 
+def call_aparat(self):
+
+    try :
+        token="8061df45098379e19114ab01f4a9eb27"
+        address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
+        response = requests.get(address)
+        data = response.json()
+        #data=json.loads(response.content)
+        frm_id=data["uploadform"]["frm-id"]
+        print(frm_id)
+
+
+    except:
+        response = requests.get("https://www.aparat.com/etc/api/login/luser/amirmansoubi828/lpass/79e9feb0135e82cab14fed182ef0891b9920d641")
+        data=json.loads(response.content)
+        token=data["login"]["ltoken"]
+        address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
+        response = requests.get(address)
+        data = response.json()
+        #data=json.loads(response.content)
+        frm_id=data["uploadform"]["frm-id"]
+
+
+    with open("sample.mp4",'rb') as f:
+        data = {"data[title]":"new title" ,"data[category]":3,"data[tags]":"تست-ای پی آی-آپارات","data[comments]":"no","data[descr]" : "123" , "frm-id":frm_id}
+        files = {"video":("sample.mp4", f, 'video/mp4')}
+        url = "https://www.aparat.com/etc/api/uploadpost/luser/amirmansoubi828/username/amirmansoubi828/ltoken/8061df45098379e19114ab01f4a9eb27/uploadid/1373380/atrty/1562881324/avrvy/977508/key/6df83cab000f4b24907277a0473237c31380ebe1/"
+        req = requests.post(url, files=files, data=data)
+        print(url)
+        print("fffffffffff")
+        print(req)
+        req.json()
+        return HttpResponse("Salam")
 
 
 def edit(request):
