@@ -283,8 +283,9 @@ def test(request):
             ddd+=1
             counter=len(data)
             counter-=2
-            
+
             print(data)
+            print("data is: ",data)
             cur_time=int(time.time()*1000000)
             print(cur_time)
             print(cur_time-int(whw_obj.last_time_question_req))
@@ -294,18 +295,23 @@ def test(request):
                 return HttpResponse(message)
             
             true_counter=0
-            
+            print("rrrrrrrrrrrrrrr")
             for i in range(1,counter+1):
                 num=i
-
-                q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
-                choice=data[str(num)]
-                true_choice=q_obj.true_choice
-
-                if(choice==true_choice):
-                    true_counter+=1
+                print("num is: ",num)
+                print(current_section)
+                try:
+                    q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
+                    print("Fffffffffffff")
+                    choice=data[str(num)]
+                    true_choice=q_obj.true_choice
+                    print(choice)
+                    if(choice==true_choice):
+                        true_counter+=1
+                except:
+                    pass
             c=int(true_counter*100/counter)
-            
+            print("rrrrrrrrrrrrrrrrrr")
             if(c>70):
                 if(whw_obj.last_pass_section+1==current_section.part):
                     whw_obj.last_pass_section+=1
@@ -843,9 +849,10 @@ def return_section_test(request):
                 for i in range(len(query)):
                     obj=query[i]
                     print(obj)
+                    print(enable_num)
                     print("ryyyyyyyyyyyyyyyyyyyyyyy")
                     print(current_section.part)
-                    if(current_section.part==enable_num):
+                    if(current_section.part<=enable_num):
                         print("yesss")
 
                         temp={}
