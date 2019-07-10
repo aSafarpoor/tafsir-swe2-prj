@@ -118,15 +118,15 @@ def call(request):
 
 
 
-
 '''
+
 @api_view(['GET', 'POST'])
 def call(request):
     if request.method=='POST' or request.method=='GET':
         
-        print(request.data)
+        # print(request.data)
 
-        
+             
         try :
             current_user = request.user
         except:
@@ -136,20 +136,17 @@ def call(request):
         if(current_user.teacher==False):
             message="not teacher"
             return HttpResponse(message)
-       
-        id
-        video
-        return ok
+        
         
         if False :
             pass
         else:
             # msg=serializer.save()
             # print("Fukkkkkkkkkkkkkkkkkkkkkkkkkk")
-            msg=request.data.pop('msg')
-            section_id=23
-
-            print("sssssssssssssssssssssss")
+            msg=request.data
+            # msg=msg[0]
+            print(msg)
+            print("\n\n")
             
             try :  
                 token="8061df45098379e19114ab01f4a9eb27"
@@ -163,50 +160,24 @@ def call(request):
                 data=json.loads(response.content)
                 token=data["login"]["ltoken"]
                 address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
-                response = requests.get(address)
-                data=json.loads(response.content)
-                frm_id=data["uploadform"]["frm-id"]
+
+
+            
+
+            # response = requests.get(address)
+            # data=json.loads(response.content)
+            # frm_id=data["uploadform"]["frm-id"]
             
             # msg["frm-id"]=frm_id
 
             # print(data)
-
-            # return HttpResponse(str(data))
-            formaction=data["uploadform"]["formAction"]
-            # print("\n\n")
-            # print(formaction)
-            # print(type(formaction))
-            # print('\n\n')   
-
-            print("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-        
             
-
-            print(msg)
-            print("\n\n")
-            print(msg[0])
-            print("\n\n\n")
-            final_url=formaction
-
-            dat={}
-
-            a=msg[0]
+            final_url="https://www.aparat.com/etc/api/uploadpost/luser/amirmansoubi828/username/amirmansoubi828/ltoken/8061df45098379e19114ab01f4a9eb27/uploadid/9331616/atrty/1562619001/avrvy/977508/key/05f962bbdb0e2fd7455bf6a712416a3b75bf54e7/"
 
 
             
-            dat["video"]=a
-            
-            # print(msg.read())
-            dat["frm-id"]=frm_id
-            dat["data[title]"]="title1"
-            dat["data[category]"]="category1"
-            dat["data[tags]"]="تست-ای \ی ای- اپارات"
-            dat["data[comment]"]="no"
-            dat["data[descr]"]="eeeeeeeeeeeee"
-            r = json.dumps(dat)
-            print("\n\nbbbbbbbbbbbbbbbbbbbbb\n\n")
-            # payload = {'number': 2, 'value': 1}
-            response = requests.post(final_url, data=r)
+           
+            response = requests.post(final_url, data=msg)
             print("\n\n")
             print(str(response.content))
             print("\n\n")

@@ -50,8 +50,9 @@ class who_has_what(models.Model):
     course_finished_time=models.CharField(null=True,blank=True,max_length=50)
     course_user=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_student',default=0)
     course_name=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fk_course',default=0)
-    grade=models.TextField(null=True,blank=True,default="")
+    grade=models.TextField(max_length=200,null=True,blank=True,default="")
     total_grade=models.IntegerField(null=True,blank=True,default=-1)
+    last_time_question_req=models.TextField(max_length=20,null=True,blank=True,default="")
 
 class section(models.Model):
     part=models.IntegerField(default=0,null=False,blank=False)

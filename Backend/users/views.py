@@ -1,3 +1,4 @@
+import time
 from rest_framework import generics
 from .serializers import TeacherInfoSerializer,WhatPersonHave,TeacherSerializer,StudentSerializer
 import json
@@ -115,6 +116,7 @@ def multiple_section(request):
         except:
             message="not available user"
             return HttpResponse(message)
+        
         try:
             # who_has_what
 
@@ -145,26 +147,33 @@ def multiple_section(request):
             except:
                 message="bed request!!!"
                 return HttpResponse(message)
-
+            
             dict={}
             try:
                 session_list=[]
+                
                 for i in range(len(query)):
+                    
                     obj=query[i]
                     if(obj.part-1<=enable_num):
                         ii=obj.part-1
-
+                        
                         temp={}
                         #temp["grade"]=.....##########################
                         try:
                             grade_=int((whw_obj.grade.split("_")[ii+1]))
                         except:
                             grade_=-1
+                        
                         temp["grade"]=grade_
                         temp["part"]=obj.part
                         temp["id"]=obj.id
                         temp["name"]=obj.name
-                        temp["movie"]=obj.movie
+                        
+                        try:
+                            temp["movie"]=obj.movie
+                        except:
+                            temp["movie"]=""
                         try:
 
                             r1=request.path
@@ -184,9 +193,10 @@ def multiple_section(request):
 
                 print(session_list)
                 dict["sessions"]=session_list
-                print("fffffff")
+                
                 #add general info:
                 temp={}
+                print("heloooooooooo")
                 temp["name"]=current_course.name
                 temp["ref"]=current_course.ref
                 temp["course_is_complte"]=whw_obj.course_completed
@@ -207,7 +217,9 @@ def multiple_section(request):
     return HttpResponse(message)
 
 def test(request):
-
+    ddd=1
+    print(11111*ddd)
+    ddd+=1
     if request.method=="POST":
         try:
             json_data=request.body
@@ -230,7 +242,8 @@ def test(request):
         else:
             message="user is not a student"
             return HttpResponse(message)
-
+        print(11111*ddd)
+        ddd+=1
         try:
             is_exist=course.objects.filter(id=data["course_id"]).exists()
             if(is_exist==False):
@@ -249,10 +262,11 @@ def test(request):
                 return HttpResponse(message)
 
             whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
+            
         except:
             message="not enough data"
             return HttpResponse(message)
-
+        
         try:
             part_num=data["part"]
             is_exist=section.objects.filter(part=part_num , course=current_course).exists()
@@ -265,9 +279,22 @@ def test(request):
             return HttpResponse(message)
 
         try:
+            print("eeeeeeeeeeeeeeeeee")
+            ddd+=1
             counter=len(data)
             counter-=2
+            
+            print(data)
+            cur_time=int(time.time()*1000000)
+            print(cur_time)
+            print(cur_time-int(whw_obj.last_time_question_req))
+            print(counter*80*1000000)
+            if(cur_time-int(whw_obj.last_time_question_req)>counter*80*1000000):
+                message="too late :("
+                return HttpResponse(message)
+            
             true_counter=0
+            
             for i in range(1,counter+1):
                 num=i
 
@@ -278,7 +305,7 @@ def test(request):
                 if(choice==true_choice):
                     true_counter+=1
             c=int(true_counter*100/counter)
-
+            
             if(c>70):
                 if(whw_obj.last_pass_section+1==current_section.part):
                     whw_obj.last_pass_section+=1
@@ -769,7 +796,7 @@ def return_section_test(request):
             return HttpResponse(message)
         try:
             # who_has_what
-            
+            print("eeeeeeeeeeeee")
             is_section_exist=section.objects.filter(id=section_id).exists()
             
             if(is_section_exist==False):
@@ -787,7 +814,7 @@ def return_section_test(request):
                 if(is_registered==False):
                     message="not registered"
                     return HttpResponse(message)
-
+                print("zzzzzzzzzzz")
                 whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
             except:
                 message="not enough data"
@@ -796,7 +823,7 @@ def return_section_test(request):
             last_pass_section=whw_obj.last_pass_section
 
             course_completed=whw_obj.course_completed
-
+            print("rrrrrrrrrrrrrr")
             enable_num=last_pass_section+1
             if(course_completed):
                 enable_num-=1
@@ -807,14 +834,19 @@ def return_section_test(request):
                 message="bed request!!!"
                 return HttpResponse(message)
 
-            
+            print("rrrrrrrrrrrrrrrrrrr")
             dict={}
             try:
                 q_list=[]
+                print(query)
+                print(enable_num)
                 for i in range(len(query)):
                     obj=query[i]
-                    if(current_section.part-1==enable_num):
-                        
+                    print(obj)
+                    print("ryyyyyyyyyyyyyyyyyyyyyyy")
+                    print(current_section.part)
+                    if(current_section.part==enable_num):
+                        print("yesss")
 
                         temp={}
                        
@@ -829,19 +861,24 @@ def return_section_test(request):
                         temp["choice3"]=obj.choice3
                         temp["choice4"]=obj.choice4
 
-
+                        print(temp)
+                        print("tttttttttt")
                         q_list.append(temp)
-
+                print("uuuuuuuuuuuuuu")
                 # print(session_list)
                 dict["q_list"]=q_list
-                # print("fffffff")
+                print("fffffff")
                 #add general info:
                 
             except:
                 message="404"
                 return HttpResponse(message)
-
-
+            print("ppppppppppppppp")
+            whw_obj.last_time_question_req=int(time.time()*1000000)
+            print("  ",whw_obj.last_time_question_req)
+            whw_obj.save()
+            # print(whw_obj.last_time_question_req)
+            print("        mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
             return JsonResponse(dict)
 
         except:

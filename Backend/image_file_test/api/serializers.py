@@ -5,6 +5,9 @@ from drf_extra_fields.fields import Base64ImageField
 import requests
 import json
 
+from moviepy.editor import *
+import pygame
+
 class CreateMember(ModelSerializer):
     class Meta:
         model = imfi
@@ -27,7 +30,7 @@ class MyImageModelSerializer(ModelSerializer):
             print("fuckkk   ")
             return imfi.objects.create(name=name)
 
-
+'''
 
 def call_aparat(movie,section_id):
     try :  
@@ -58,12 +61,19 @@ def call_aparat(movie,section_id):
     r = json.dumps(dat)
     # print("\n\nbbbbbbbbbbbbbbbbbbbbb\n\n")
     # payload = {'number': 2, 'value': 1}
-    response = requests.post(final_url, data=r)
+
+
+
+
+
+    headers = {'content-type': 'multipart/form-data'}
+
+    response = requests.post(final_url, data=r,headers=headers)
     print("\n\n")
     print(str(response.content))
     print("\n\n")
 
-       
+   '''    
 
 class tempModelSerializer(ModelSerializer):
     class Meta:
@@ -78,7 +88,7 @@ class tempModelSerializer(ModelSerializer):
         # print(movie)
         # call_aparat(movie,section_id)
         #####
-        try :  
+        '''try :  
             token="8061df45098379e19114ab01f4a9eb27"
             address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
             response = requests.get(address)
@@ -93,27 +103,45 @@ class tempModelSerializer(ModelSerializer):
             response = requests.get(address)
             data=json.loads(response.content)
             frm_id=data["uploadform"]["frm-id"]
-            
-        dat={}
-        dat["video"]=movie
+        '''
+        # formaction=data["uploadform"]["formAction"]
+        # final_url=formaction
 
-        dat["frm-id"]=frm_id
+        dat={}
+        # print(type(movie))
+        # file = open("/home/ali/Videos/os_lab/1/insert.mp4","rb")
+        dat["video"]=movie
+        # print("\n\n")
+        # print(type(movie))
+        # # print("\n\n")
+        dat["frm-id"]=20873  
         dat["data[title]"]="title1"
         dat["data[category]"]="category1"
         dat["data[tags]"]="تست-ای \ی ای- اپارات"
         dat["data[comment]"]="no"
         dat["data[descr]"]="eeeeeeeeeeeee"
-        r = json.dumps(dat)
+
+        # print (dat)
+        # r = json.dumps(dat)
         # print("\n\nbbbbbbbbbbbbbbbbbbbbb\n\n")
         # payload = {'number': 2, 'value': 1}
-        response = requests.post(final_url, data=r)
+        # print(dat)
+        final_url="https://www.aparat.com/etc/api/uploadpost/luser/amirmansoubi828/username/amirmansoubi828/ltoken/8061df45098379e19114ab01f4a9eb27/uploadid/3332608/atrty/1562744213/avrvy/977508/key/c1af3169a7ceecd955efe2897f2db1cdbe9dbc51/"
+        
+        # dat = json.dumps(dat)
+        headers = {'content-type': 'multipart/form-data'}
+
+        response = requests.post(final_url, data=dat,headers=headers)
+        
+        
+        # response = requests.post(final_url, data=dat)
         print("\n\n")
         print(str(response.content))
         print("\n\n")
 
         #####
         discription="remove_it"
-        print("fuckkk   ")
+        # print("fuckkk   ")
         return movie_link.objects.create(discription=discription)
 
 
