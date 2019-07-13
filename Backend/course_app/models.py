@@ -10,21 +10,15 @@ from users.models import CustomUser as t_model
 class course (models.Model) : 
     name=models.TextField(null=False,max_length=50,default="no_Name")
     summary=models.TextField(null=True,max_length=250)
-    pre_movie=models.TextField(null=True,blank=True)
-    Headlines=models.TextField(null=True,blank=True,max_length=450)
-    user_number=models.IntegerField(default=0)
+    # user_number=models.IntegerField(default=0)
     course_section_number=models.IntegerField(null=True,blank=True,default=0)
     total_time_of_course=models.IntegerField(null=True,blank=True,default=0)
-    ref=models.TextField(null=True,max_length=450,blank=True)
-    price=models.IntegerField(default=0,null=True,blank=True)
-    all_text_content=models.TextField(null=True,blank=True)
-    exam=models.TextField(null=True,blank=True)
+    # all_text_content=models.TextField(null=True,blank=True)
     course_teacher=models.ForeignKey(t_model,on_delete=models.CASCADE,related_name='fk_teacher',default=0)
     course_main_field=models.TextField(null=True,blank=True,max_length=100)
     user_counter=models.IntegerField(default=0)
-    picture=models.ImageField(null=True,blank=True,upload_to="folanja/",default="folanja/images.png")
-   
-    #course_main_field=models.ForeignKey(fields,on_delete=models.CASCADE,null=True,blank=True,related_name='fk_fields1')
+    # picture=models.ImageField(null=True,blank=True,upload_to="folanja/",default="folanja/images.png")
+    picture=models.IntegerField(null=True,blank=True)
 
 
 from django.db.models import signals
@@ -57,9 +51,12 @@ class who_has_what(models.Model):
 class section(models.Model):
     part=models.IntegerField(default=0,null=False,blank=False)
     name=models.TextField(max_length=100,null=True,blank=True,default="")
+    detail=models.TextField(max_length=100,null=True,blank=True,default="")
     movie_id=models.IntegerField(null=True,blank=True)
-    file=models.FileField(null=True,blank=True,upload_to="anja/")#,defult="anja/nofile.txt")
+    # file=models.FileField(null=True,blank=True,upload_to="anja/")#,defult="anja/nofile.txt")
     course=models.ForeignKey(course,on_delete=models.CASCADE,related_name='fkcourse',default=0)
+    file=models.IntegerField(null=True,blank=True)
+
 
 class question_exam(models.Model):
     number=models.IntegerField(default=-1,null=False,blank=False)
@@ -72,3 +69,5 @@ class question_exam(models.Model):
     which_section=models.ForeignKey(section,on_delete=models.CASCADE,related_name='fk_section',default=0)
 
 
+class file_pull(models.Model):
+    file=models.FileField(null=True,blank=True,upload_to="anja/")

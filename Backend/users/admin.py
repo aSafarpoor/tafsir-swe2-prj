@@ -7,7 +7,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import CustomUser
 from aboutus_app.models import aboutus,contactus,news
 from course_app.models import course,section
-from course_app.models import who_has_what,question_exam
+from course_app.models import who_has_what,question_exam,file_pull
 #class CustomUserAdmin(UserAdmin):
     #add_form = CustomUserCreationForm
     #form = CustomUserChangeForm
@@ -24,3 +24,4 @@ admin.site.register(aboutus)
 admin.site.register(news)
 admin.site.register(movie_link)
 admin.site.register(contactus)
+admin.site.register(file_pull)

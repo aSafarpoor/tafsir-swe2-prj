@@ -7,7 +7,7 @@ from django.http import HttpResponse,JsonResponse
 from django.core import  serializers
 from . import models
 from . import serializers
-from course_app.models import course,question_exam
+from course_app.models import course,question_exam,file_pull
 from course_app.models import who_has_what,section
 from users.models import CustomUser
 from datetime import datetime
@@ -34,6 +34,7 @@ class TeacherDetailsAPIView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = TeacherInfoSerializer
 
+'''
 class JoinTable(generics.ListAPIView):
     serializer_class =  WhatPersonHave
 
@@ -44,6 +45,74 @@ class JoinTable(generics.ListAPIView):
         """
         choosed_id = self.kwargs['choosed_id']
         return course.objects.filter(course_teacher=choosed_id)
+'''
+
+def JoinTable(request):
+    if request.method=='GET':
+        if 's' in request.GET:
+            requested_id=int(request.GET['s'])
+        else:
+            message="bad request"
+            return HttpResponse(message)
+              
+        try:
+            # who_has_what
+
+            is_course_exist=course.objects.filter(id=requested_id).exists()
+
+            if(is_course_exist==False):
+                message="not eanble course"
+                return HttpResponse(message)
+            current_course=course.objects.filter(id=requested_id)[0]
+            
+            temp={}
+            temp["name"]=current_course.name
+
+            temp["summary"]=current_course.summary
+            # temp["pre_movie"]=current_course.pre_movie
+            # temp["Headlines"]=current_course.Headlines
+
+            temp["course_section_number"]=current_course.course_section_number
+            temp["total_time_of_course"]=current_course.total_time_of_course
+        
+            temp["course_main_field"]=current_course.course_main_field
+            
+            
+            try:
+                objmovie=file_pull.objects.filter(id=current_course.picture)[0]
+            
+                r1=request.path
+                r2=request.build_absolute_uri('/')
+                #r3=r2[:-1]+r1
+                r3=r2[:-1]
+
+                file_=str(objmovie.file.url)
+                r3+=file_
+                temp["picture"]=r3
+            except:
+                pass
+            try:
+                return JsonResponse(temp)
+            
+            except Exception as e: 
+                print(e)
+                message="404"
+                return HttpResponse(message)
+            # dict["general_info"]=temp
+
+
+        except:
+            message="404"
+        return HttpResponse(message)
+
+
+
+
+
+
+
+
+
 
 
 def register(request):
@@ -53,17 +122,16 @@ def register(request):
         except:
             message="bad urllll"
             return HttpResponse(message)
-
+        print(json_data)
         data=json.loads(json_data)
-
         try :
             current_user = request.user
         #    name=current_user.name
-
+        
         except:
             message="not logged in"
             return HttpResponse(message)
-
+        print(current_user)
         if current_user.student==True:
             pass
         else:
@@ -106,17 +174,18 @@ def register(request):
 
 def multiple_section(request):
     if request.method=='GET':
+        print(11111111111111)
         if 's' in request.GET:
             requested_id=int(request.GET['s'])
         else:
-            message="bad request"
+            message="bad     request"
             return HttpResponse(message)
         try:
             current_user=request.user
         except:
             message="not available user"
             return HttpResponse(message)
-        
+        print("helooo")        
         try:
             # who_has_what
 
@@ -171,20 +240,42 @@ def multiple_section(request):
                         temp["name"]=obj.name
                         
                         try:
-                            temp["movie"]=obj.movie
+                            # is_exist=file_pull.objects.filter(id=obj.movie).exists()
+                            # objmovie=file_pull.objects.filter(id=obj.movie)[0].file
+                            # temp["movie"]=objmovie
+
+                            objmovie=file_pull.objects.filter(id=obj.movie)[0]
+                            
+                            try:
+                                r1=request.path
+                                r2=request.build_absolute_uri('/')
+                                #r3=r2[:-1]+r1
+                                r3=r2[:-1]
+
+                                file_=str(objmovie.file.url)
+                                r3+=file_
+                                temp["movie"]=r3
+                            except:
+                                pass
+
+
+                            
                         except:
                             temp["movie"]=""
                         try:
-
+                
+                            objmovie=file_pull.objects.filter(id=obj.file)[0]
+        
                             r1=request.path
                             r2=request.build_absolute_uri('/')
                             #r3=r2[:-1]+r1
                             r3=r2[:-1]
 
-                            file_=str(obj.file.url)
+                            file_=str(objmovie.file.url)
                             r3+=file_
                             temp["file"]=r3
 
+                        
                         except:
 
                             temp["file"]=""
@@ -196,9 +287,9 @@ def multiple_section(request):
                 
                 #add general info:
                 temp={}
-                print("heloooooooooo")
+                # print("heloooooooooo")
                 temp["name"]=current_course.name
-                temp["ref"]=current_course.ref
+                # temp["ref"]=current_course.ref
                 temp["course_is_complte"]=whw_obj.course_completed
                 temp["course_total_grade"]=whw_obj.total_grade
                 temp[ "course_finished_time"]=whw_obj.course_finished_time
@@ -302,10 +393,10 @@ def test(request):
                 print(current_section)
                 try:
                     q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
-                    print("Fffffffffffff")
+                    
                     choice=data[str(num)]
                     true_choice=q_obj.true_choice
-                    print(choice)
+                    
                     if(choice==true_choice):
                         true_counter+=1
                 except:
@@ -432,19 +523,39 @@ def get_own_course_info(request):
 
                         temp["part"]=obj.part
                         temp["name"]=obj.name
-                        temp["movie"]=obj.movie
-
+                        
+                        # is_exist=file_pull.objects.filter(id=obj.movie).exists()
+                        # objmovie=section.objects.filter(id=obj.movie)[0]
+                        # temp["movie"]=objmovie
+                        
+            
                         try:
-
+                            objmovie=file_pull.objects.filter(id=obj.movie)[0]
                             r1=request.path
                             r2=request.build_absolute_uri('/')
                             #r3=r2[:-1]+r1
                             r3=r2[:-1]
 
-                            file_=str(obj.file.url)
+                            file_=str(objmovie.file.url)
+                            r3+=file_
+                            temp["movie"]=r3
+                        except:
+                            pass
+
+                        try:
+                            
+                            # objmovie=file_pull.objects.filter(id=obj.file)[0]
+                            # temp["file"]=objmovie
+                            objmovie=file_pull.objects.filter(id=obj.file)[0]
+                            r1=request.path
+                            r2=request.build_absolute_uri('/')
+                            #r3=r2[:-1]+r1
+                            r3=r2[:-1]
+
+                            file_=str(objmovie.file.url)
                             r3+=file_
                             temp["file"]=r3
-
+                            
                         except:
 
                             temp["file"]=""
@@ -484,18 +595,31 @@ def get_own_course_info(request):
                 temp["name"]=current_course.name
 
                 temp["summary"]=current_course.summary
-                temp["pre_movie"]=current_course.pre_movie
-                temp["Headlines"]=current_course.Headlines
+                # temp["pre_movie"]=current_course.pre_movie
+                # temp["Headlines"]=current_course.Headlines
 
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
-                temp["ref"]=current_course.ref
-                temp["price"]=current_course.price
+                # temp["ref"]=current_course.ref
+                # temp["price"]=current_course.price
                 #temp["course_teacher"]=current_user
                 temp["course_main_field"]=current_course.course_main_field
 
 
 
+                try:
+                    objmovie=file_pull.objects.filter(id=current_course.picture)[0]
+                
+                    r1=request.path
+                    r2=request.build_absolute_uri('/')
+                    #r3=r2[:-1]+r1
+                    r3=r2[:-1]
+
+                    file_=str(objmovie.file.url)
+                    r3+=file_
+                    temp["picture"]=r3
+                except:
+                    pass
 
                 dict["general_info"]=temp
             except:
@@ -563,19 +687,22 @@ def get_own_course_info2(request):
 
                         temp["part"]=obj.part
                         temp["name"]=obj.name
-                        temp["movie"]=obj.movie
+                        # temp["movie"]=obj.movie
 
+                       
+                        # objmovie=file_pull.objects.filter(id=obj.file)[0]
+                        # temp["file"]=objmovie
                         try:
-
+                            objmovie=file_pull.objects.filter(id=obj.file)[0]
                             r1=request.path
                             r2=request.build_absolute_uri('/')
-
+                            #r3=r2[:-1]+r1
                             r3=r2[:-1]
 
-                            file_=str(obj.file.url)
+                            file_=str(objmovie.file.url)
                             r3+=file_
                             temp["file"]=r3
-
+                        
                         except:
 
                             temp["file"]=""
@@ -586,7 +713,7 @@ def get_own_course_info2(request):
                             is_exist=question_exam.objects.filter(which_section=obj).exists()
                             q_query=question_exam.objects.filter(which_section=obj)
                         except:
-                            pass
+                            q_query=[]
 
 
                         for i in range(len(q_query)):
@@ -615,18 +742,30 @@ def get_own_course_info2(request):
                 temp["name"]=current_course.name
 
                 temp["summary"]=current_course.summary
-                temp["pre_movie"]=current_course.pre_movie
-                temp["Headlines"]=current_course.Headlines
+                # temp["pre_movie"]=current_course.pre_movie
+                # temp["Headlines"]=current_course.Headlines
 
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
-                temp["ref"]=current_course.ref
-                temp["price"]=current_course.price
+                # temp["ref"]=current_course.ref
+                # temp["price"]=current_course.price
                 #temp["course_teacher"]=current_user
                 temp["course_main_field"]=current_course.course_main_field
 
 
+                try:
+                    objmovie=file_pull.objects.filter(id=current_course.picture)[0]
+                
+                    r1=request.path
+                    r2=request.build_absolute_uri('/')
+                    #r3=r2[:-1]+r1
+                    r3=r2[:-1]
 
+                    file_=str(objmovie.file.url)
+                    r3+=file_
+                    temp["picture"]=r3
+                except:
+                    pass
 
                 dict["general_info"]=temp
             except:
@@ -802,7 +941,6 @@ def return_section_test(request):
             return HttpResponse(message)
         try:
             # who_has_what
-            print("eeeeeeeeeeeee")
             is_section_exist=section.objects.filter(id=section_id).exists()
             
             if(is_section_exist==False):
@@ -820,7 +958,7 @@ def return_section_test(request):
                 if(is_registered==False):
                     message="not registered"
                     return HttpResponse(message)
-                print("zzzzzzzzzzz")
+                
                 whw_obj=who_has_what.objects.filter(course_user=current_user,course_name=current_course)[0]
             except:
                 message="not enough data"
@@ -829,7 +967,7 @@ def return_section_test(request):
             last_pass_section=whw_obj.last_pass_section
 
             course_completed=whw_obj.course_completed
-            print("rrrrrrrrrrrrrr")
+            
             enable_num=last_pass_section+1
             if(course_completed):
                 enable_num-=1
@@ -840,20 +978,13 @@ def return_section_test(request):
                 message="bed request!!!"
                 return HttpResponse(message)
 
-            print("rrrrrrrrrrrrrrrrrrr")
             dict={}
             try:
                 q_list=[]
-                print(query)
-                print(enable_num)
                 for i in range(len(query)):
                     obj=query[i]
-                    print(obj)
-                    print(enable_num)
-                    print("ryyyyyyyyyyyyyyyyyyyyyyy")
-                    print(current_section.part)
                     if(current_section.part<=enable_num):
-                        print("yesss")
+                      
 
                         temp={}
                        
@@ -868,24 +999,19 @@ def return_section_test(request):
                         temp["choice3"]=obj.choice3
                         temp["choice4"]=obj.choice4
 
-                        print(temp)
-                        print("tttttttttt")
                         q_list.append(temp)
-                print("uuuuuuuuuuuuuu")
+             
                 # print(session_list)
                 dict["q_list"]=q_list
-                print("fffffff")
+                
                 #add general info:
                 
             except:
                 message="404"
                 return HttpResponse(message)
-            print("ppppppppppppppp")
+    
             whw_obj.last_time_question_req=int(time.time()*1000000)
-            print("  ",whw_obj.last_time_question_req)
             whw_obj.save()
-            # print(whw_obj.last_time_question_req)
-            print("        mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
             return JsonResponse(dict)
 
         except:

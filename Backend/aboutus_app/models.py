@@ -3,7 +3,7 @@ from django.db import models
 # from fields.models import fields
 from users.models import CustomUser as t_model
 
-
+from persiantools.jdatetime import JalaliDate
 
 # Create your models here.
 
@@ -21,8 +21,11 @@ class news(models.Model) :
     title=models.TextField(null=False,max_length=50,default="no_Name")
     explanation=models.TextField(null=False,max_length=5000,default="no_Name")
     picture=models.ImageField(null=True,blank=True,) 
-   
+    timee=models.TextField(null=True,blank=True,max_length=12,default=str(JalaliDate.today()))
+
+
 class contactus(models.Model) :
     explanation=models.TextField(null=False,max_length=1000,default="no_Name")
+    email=models.EmailField(null=True,blank=True)
      
    

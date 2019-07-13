@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from  course_app.models import course,section
+from  course_app.models import course,section,file_pull
 
 class CourseListSerializer(ModelSerializer):
     class Meta:
@@ -11,3 +11,10 @@ class CourseListSerializer(ModelSerializer):
         model=section
         fields='__all__'
 '''
+
+
+class fileListSerializer(ModelSerializer):
+    class Meta:
+        model=file_pull
+        fields='__all__'
+

@@ -1,12 +1,10 @@
 from rest_framework import generics
-from course_app.models import course,section,question_exam
+from course_app.models import course,section,question_exam,file_pull
 #from serializers import CourseListSerializer
-from  .serializers import CourseListSerializer
+from  .serializers import CourseListSerializer,fileListSerializer
 import json
 from django.http import HttpResponse
-import requests
-from django.shortcuts import render
-
+from users.models import CustomUser
 
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
@@ -15,22 +13,31 @@ class CourseListAPIview(generics.ListAPIView):
     queryset = section.objects.all()
     serializer_class = SectionListSerializer
 '''
-
+class FileCreateAPIview(generics.CreateAPIView):
+    queryset = file_pull.objects.all()
+    serializer_class = fileListSerializer
 
 def create(request):
     # print("\nhellooooo\n\n\n")
-    if request.method=="POST":
+
+    if request.method=="POST" or request.method=="OPTIONS":
         try:
             json_data=request.body
         except:
             message="bad urllll"
             return HttpResponse(message)
-        
+        # print(json_data)
         data=json.loads(json_data)
+        # print("\n\n",data,"\n\n")
+        # data=data["value"]
+        # print("\n\n",data,"\n\n")
         # print("\n\n\n\ndata is:",data,"\n\n\n\n")
 
         try :
-            current_user = request.user
+            # current_user = request.user
+            ###############################
+            current_user = CustomUser.objects.all()[0]
+            # current_course=course.objects.filter( )
             # name=current_user.name
         except:
             message="not logged in"
@@ -48,30 +55,91 @@ def create(request):
             if(is_exist==True):
                 message="exist course with same name for this user"
                 return HttpResponse(message)
-            number_of_sections=data["number_of_sections"]
+            
+            try:
+                number_of_sections=data["number_of_sections"]
+            except:
+                pass
             course_obj=course()
-            course_obj.name=data["name"]
-            course_obj.summary=data["summary"]
-            course_obj.pre_movie=data["pre_movie"]
-            course_obj.Headlines=data["Headlines"]
-            course_obj.course_section_number=number_of_sections
-            course_obj.total_time_of_course=data["total_time_of_course"]
-            course_obj.ref=data["ref"]
-            course_obj.price=int(data["price"])
-            course_obj.course_teacher=current_user
-            course_obj.course_main_field=data["course_main_field"]
-            course_obj.save()
+            try:
+                course_obj.name=data["name"]
+            except:
+                pass
+            try:
+                course_obj.summary=data["summary"]
+            except:
+                pass
+            try:
+                course_obj.user_counter=0
+            except:
+                pass
+            
+            try:
+                course_obj.course_section_number=number_of_sections
+            except:
+                pass
+            try:
+                course_obj.total_time_of_course=data["total_time_of_course"]
+            except:
+                pass
+            try:
+                course_obj.course_teacher=current_user
+            except:
+                pass
+            try:
+                course_obj.course_main_field=data["course_main_field"]
+            except:
+                pass
+            
+            try:
+                course_obj.picture=data["picture"]["picture"]
+            except:
+                pass
+
+            try:
+                course_obj.save()
+            except Exception as e:
+                print(type(e))
+
+
             for i in range(1,number_of_sections+1):
-                section_dict=data[str(i)]
-                #print(section_dict)
-                section_obj=section()
-                section_obj.part=i
-                section_obj.name=section_dict["name"]
-                section_obj.movie=section_dict["movie"]
-                section_obj.file=section_dict["file"]
-                section_obj.course=course_obj
+                try:
+                    section_dict=data[str(i)]
+                except:
+                    pass
+                try:
+                    section_obj=section()
+                except:
+                    pass
+                try:
+                    section_obj.part=i
+                except:
+                    pass
+                try:
+                    section_obj.name=section_dict["name"]
+                except:
+                    pass
+                try:
+                    section_obj.movie=section_dict["movie"]
+                except:
+                    pass
+                try:
+                    section_obj.file=section_dict["file"]
+                except:
+                    pass
+                try:
+                    section_obj.detail=section_dict["detail"]
+                except:
+                    pass
+                try:
+                    section_obj.course=course_obj
+                except:
+                    pass
                 section_obj.save()
-                num=section_dict["number_of_exam_question"]
+                try:
+                    num=section_dict["number_of_exam_question"]
+                except:
+                    pass
                 for j in range(1,num+1):
                     
                     info=section_dict[str(j)]
@@ -79,15 +147,34 @@ def create(request):
                     q_obj=question_exam()
                     
                     q_obj.number=j#str(j)
-                    
-                    q_obj.question=info["question"]
-                    q_obj.choice1=info["choice1"]
-                    
-                    q_obj.choice2=info["choice2"]
-                    q_obj.choice3=info["choice3"]
-                    q_obj.choice4=info["choice4"]
-                    q_obj.true_choice=info["true_choice"]
-                    q_obj.which_section=section_obj
+                    try:
+                        q_obj.question=info["question"]
+                    except:
+                        pass
+                    try:
+                        q_obj.choice1=info["choice1"]
+                    except:
+                        pass                
+                    try:
+                        q_obj.choice2=info["choice2"]
+                    except:
+                        pass
+                    try:
+                        q_obj.choice3=info["choice3"]
+                    except:
+                        pass
+                    try:
+                        q_obj.choice4=info["choice4"]
+                    except:
+                        pass
+                    try:
+                        q_obj.true_choice=info["true_choice"]
+                    except:
+                        pass
+                    try:
+                        q_obj.which_section=section_obj
+                    except:
+                        pass
                     q_obj.save()
                     
             message="created"
@@ -97,6 +184,8 @@ def create(request):
             return HttpResponse(message)
        
     else :
+        print("type is ",request.method)
+        print("\n",request.body)
         message="bad request"
         return HttpResponse(message)
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#
@@ -154,51 +243,6 @@ def create(request):
 }'''
 ####################################
 
-def call_aparat(self):
-
-    try :
-        token="8061df45098379e19114ab01f4a9eb27"
-        address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
-        response = requests.get(address)
-        data = response.json()
-        # req.json()
-        print(data)
-        # lastURL = data["uploadform"]["directuploadAction"]
-        lastURL = data["uploadform"]["formAction"]
-        #data=json.loads(response.content)
-        frm_id=data["uploadform"]["frm-id"]
-        print(frm_id)
-
-
-    except:
-        response = requests.get("https://www.aparat.com/etc/api/login/luser/amirmansoubi828/lpass/79e9feb0135e82cab14fed182ef0891b9920d641")
-        data=json.loads(response.content)
-        token=data["login"]["ltoken"]
-        address="https://www.aparat.com/etc/api/uploadform/luser/amirmansoubi828/ltoken/"+token
-        response = requests.get(address)
-        data = response.json()
-        req.json()
-        print(data)
-        #data=json.loads(response.content)
-        frm_id=data["uploadform"]["frm-id"]
-
-
-    with open("sample.mp4",'rb') as f:
-        data = {"data[title]":"new title" ,"data[category]":3,"data[tags]":"تست-ای پی آی-آپارات","data[comments]":"no","data[descr]" : "123" , "frm-id":frm_id}
-        files = {"video":("sample.mp4", f, 'video/mp4')}
-#       url1 ="https://www.aparat.com/etc/api/uploadpost/luser/amirmansoubi828/username/amirmansoubi828/ltoken/8061df45098379e19114ab01f4a9eb27/uploadid/3805653/atrty/1562794979/avrvy/977508/key/3a189c6866d86c31c4f173edaae2e2be83636a5d/"
-        url = lastURL
-        print("snooooooooooooooooooop")
-        print(lastURL)
-        req = requests.post(url, files=files, data=data)
-        print(url)
-        print("fffffffffff")
-        print(req)
-        req.json()
-        return HttpResponse("Salam")
-
-
-        # return render(req)
 
 
 def edit(request):
@@ -267,9 +311,14 @@ def edit(request):
                 section_obj.part=i
 
                 section_obj.name=section_dict["name"]
-                section_obj.movie=section_dict["movie"]
-                section_obj.file=section_dict["file"]
-
+                try:
+                    section_obj.movie=section_dict["movie"]
+                except:
+                    pass
+                try:
+                    section_obj.file=section_dict["file"]["file"]
+                except:
+                    pass
                 section_obj.course=course_obj
                 section_obj.save()
                 num=section_dict["number_of_exam_question"]
@@ -374,3 +423,67 @@ def edit(request):
     
 }
 '''
+
+
+
+
+
+
+
+
+
+from rest_framework.serializers import ModelSerializer
+from image_file_test.models import image_file as imfi
+from image_file_test.models import movie_link 
+from drf_extra_fields.fields import Base64ImageField
+import requests
+import json
+from course_app.models import file_pull
+
+from rest_framework.decorators import api_view
+
+
+''''
+
+class MyImageModelSerializer(ModelSerializer):
+    class Meta:
+        model=file_pull
+        fields= ['file']
+    def create(self, validated_data):
+        print("helloooo")
+        file=validated_data.pop('file')
+        return file_pull.objects.create(file=file)
+
+
+
+
+@api_view(['GET', 'POST'])
+def get_file_view(request):
+    if request.method=="POST" :
+        
+        serializer = MyImageModelSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            
+            serializer.save()
+            # oid=serializer.id
+            oid=123
+            message=str(oid)
+            return HttpResponse(message)
+        
+        message="nokey"
+        return HttpResponse(message)
+    else:
+        message="bad request"
+        return HttpResponse(message)
+
+
+
+#  obj=movie_link()        
+#         obj.save()
+#         obj_id=obj.id
+
+
+
+'''
+
