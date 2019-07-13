@@ -36,7 +36,14 @@ def create(request):
         try :
             # current_user = request.user
             ###############################
-            current_user = CustomUser.objects.all()[0]
+            # current_user = CustomUser.objects.all()[0]
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # current_course=course.objects.filter( )
             # name=current_user.name
         except:
@@ -257,7 +264,14 @@ def edit(request):
         data=json.loads(json_data)
 
         try :
-            current_user = request.user
+            # current_user = request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # name=current_user.name
         except:
             message="not logged in"
