@@ -21,6 +21,8 @@ urlpatterns = [
     url(r'^course_inf',views.get_own_course_info2),
     url(r'^course_counter',views.course_counter),
     url(r'^return_section_test',views.return_section_test),
+    url(r'^user_courses',views.user_courses),
+    
     url(r'^ask_certification',views.ask_crtification),
 
 ]

@@ -148,6 +148,43 @@ def user_info(request):
     return HttpResponse(message)
 
 
+def user_courses(request):
+   
+    if request.method=="GET" or request.method=="OPTIONS":
+        print("saaaaaaaa")
+        try :
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+        # try:
+        #     current_user=request.user
+        except:
+            message="not logged in"
+            return HttpResponse(message)
+        print(current_user)
+        dict={}
+        dict["name"]=""
+        query=who_has_what.objects.filter(course_user=current_user)
+        print(query)
+        t=0
+        for i in query:
+            t+=1
+            #temp={}
+            #temp["id"]=i.course_name.id
+            dict["name"]+=str(i.course_name.name)+"***"
+	    
+            #dict[str(t)]=temp
+
+        print("asddddddddddddddddd")
+        return JsonResponse(dict)
+    
+    message="bad request"
+    return HttpResponse(message)
+
 
 
 
@@ -345,7 +382,7 @@ def multiple_section(request):
                 temp["course_is_complte"]=whw_obj.course_completed
                 temp["course_total_grade"]=whw_obj.total_grade
                 temp[ "course_finished_time"]=whw_obj.course_finished_time
-                dict[" general_info"]=temp
+                dict["general_info"]=temp
             except:
                 message="404"
                 return HttpResponse(message)
