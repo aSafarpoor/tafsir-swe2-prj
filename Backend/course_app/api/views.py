@@ -431,6 +431,8 @@ def edit(request):
 
 
 
+''''
+
 
 from rest_framework.serializers import ModelSerializer
 from image_file_test.models import image_file as imfi
@@ -442,8 +444,6 @@ from course_app.models import file_pull
 
 from rest_framework.decorators import api_view
 
-
-''''
 
 class MyImageModelSerializer(ModelSerializer):
     class Meta:

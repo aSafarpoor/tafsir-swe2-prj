@@ -35,7 +35,7 @@ class TeacherDetailsAPIView(generics.RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = TeacherInfoSerializer
 
-'''
+
 class JoinTable(generics.ListAPIView):
     serializer_class =  WhatPersonHave
 
@@ -44,67 +44,66 @@ class JoinTable(generics.ListAPIView):
         This view should return a list of all the purchases for
         the user as determined by the username portion of the URL.
         """
-        choosed_id = self.kwargs['choosed_id']
+        choosed_id = self.kwargs['id']
         return course.objects.filter(course_teacher=choosed_id)
-'''
 
-def JoinTable(request):
+
+
+
+def ct(request):
+    print("11111111111")
     if request.method=='GET':
-        if 's' in request.GET:
-            requested_id=int(request.GET['s'])
-        else:
-            message="bad request"
-            return HttpResponse(message)
-              
+                      
         try:
-            # who_has_what
+            print(2222222222222222)
+            try :
+                token=request.META["HTTP_TOKEN"]
+                if(token[0]=="\""):
+                    token=token[1:-1]
+                
+                obj = Token.objects.filter(key=token)[0]
+        
+                current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+            
+            except:
+                message="not logged in"
+                return HttpResponse(message)
 
-            is_course_exist=course.objects.filter(id=requested_id).exists()
-
+            is_course_exist=course.objects.filter(course_teacher=current_user).exists()
+            print(3333333333333333333)
+            print(is_course_exist)
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
-            current_course=course.objects.filter(id=requested_id)[0]
-            
-            temp={}
-            temp["name"]=current_course.name
-
-            temp["summary"]=current_course.summary
-            # temp["pre_movie"]=current_course.pre_movie
-            # temp["Headlines"]=current_course.Headlines
-
-            temp["course_section_number"]=current_course.course_section_number
-            temp["total_time_of_course"]=current_course.total_time_of_course
-        
-            temp["course_main_field"]=current_course.course_main_field
-            
-            
-            try:
-                objmovie=file_pull.objects.filter(id=current_course.picture)[0]
-            
-                r1=request.path
-                r2=request.build_absolute_uri('/')
-                #r3=r2[:-1]+r1
-                r3=r2[:-1]
-
-                file_=str(objmovie.file.url)
-                r3+=file_
-                temp["picture"]=r3
-            except:
-                pass
-            try:
-                return JsonResponse(temp)
-            
-            except Exception as e: 
-                print(e)
-                message="404"
-                return HttpResponse(message)
-            # dict["general_info"]=temp
-
-
+            print(444444444444)
+            current_course=course.objects.filter(course_teacher=current_user)
+            print(current_course)
+            dict={}
+            tem=[]
+            t=0
+            for i in current_course:
+                t+=1
+                temp={}
+                temp["name"]=i.name
+                temp["summary"]=i.summary
+                temp["course_section_number"]=i.course_section_number
+                temp["total_time_of_course"]=i.total_time_of_course
+                temp["course_teacher"]=i.course_teacher
+                temp["course_main_field"]=i.course_main_field
+                temp["user_counter"]=i.user_counter
+                print(33333333333333333333)
+                # tem.append(temp)
+                
+                dict[str(t)]=str(temp)
+            print(dict)
+            return JsonResponse(dict)
         except:
+            print("Fffffffffffffffffffff")
             message="404"
-        return HttpResponse(message)
+            return HttpResponse(message)
+    print("dddddddddddddd")
+    message="404"
+    return HttpResponse(message)
 
 
 
@@ -191,7 +190,7 @@ def user_courses(request):
 
 
 def register(request):
-    if request.method=="POST":
+    if request.method=="POST" or request.method=="OPTIONS":
         try:
             json_data=request.body
         except:
@@ -199,7 +198,9 @@ def register(request):
             return HttpResponse(message)
         print(json_data)
         data=json.loads(json_data)
+        print(data)
         try :
+            print(1111111111111)
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
                 token=token[1:-1]
@@ -213,7 +214,7 @@ def register(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        # print(current_user)
+        print(current_user,"sssssssssssssssssssss")
         if current_user.student==True:
             pass
         else:
@@ -1050,8 +1051,11 @@ def ask_crtification(request):
         return HttpResponse(message)
 
 
+from django_csrf_protect_form import csrf_protect_form
 
+@csrf_protect_form
 def return_section_test(request):
+
     print("wwwwwwwwwww")
     if request.method=='GET' or request.method=='OPTIONS':
         print("zadsfgb")
