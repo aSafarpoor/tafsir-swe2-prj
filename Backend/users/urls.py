@@ -14,13 +14,13 @@ urlpatterns = [
     url(r'^teacher_courses',views.JoinTable,name='teacher_courses') ,
     url(r'^teacher_info/(?P<id>\w{0,50})/$', views.TeacherDetailsAPIView.as_view()),
     url(r'^register',views.register),
+    url(r'^user_info',views.user_info),
     url(r'^parts',views.multiple_section),
     url(r'^test',views.test),
     url(r'^course_info',views.get_own_course_info),
     url(r'^course_inf',views.get_own_course_info2),
     url(r'^course_counter',views.course_counter),
     url(r'^return_section_test',views.return_section_test),
-    
     url(r'^ask_certification',views.ask_crtification),
 
 ]

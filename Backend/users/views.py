@@ -17,7 +17,8 @@ import datetime
 from persiantools.jdatetime import JalaliDate
 from PIL import Image
 
-#from serializers import CourseListSerializer
+from rest_framework.authtoken.models import Token
+
 
 class StudentListView(generics.ListCreateAPIView):
     queryset = models.CustomUser.objects.filter(student=True)
@@ -109,6 +110,43 @@ def JoinTable(request):
 
 
 
+def user_info(request):
+    # print("start")  
+    # print("header ",request.headers)
+    
+
+    # print(request.method," ddddddddddddddddddddddddddd ")
+    
+    if request.method=="GET" or request.method=="OPTIONS":
+        # try:
+        #     json_data=request.body
+        # except:
+        #     message="bad urllll"
+        #     return HttpResponse(message)
+        # print(json_data)
+        try :
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+        
+        except:
+            message="not logged in"
+            return HttpResponse(message)
+        
+        dict={}
+        dict["first_name"]=current_user.first_name
+        dict["last_name"]=current_user.last_name
+        dict["email"]=current_user.email
+        print(dict)
+        return JsonResponse(dict)
+    
+    message="bad request"
+    return HttpResponse(message)
+
 
 
 
@@ -125,13 +163,20 @@ def register(request):
         print(json_data)
         data=json.loads(json_data)
         try :
-            current_user = request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+            # current_user = request.user
         #    name=current_user.name
         
         except:
             message="not logged in"
             return HttpResponse(message)
-        print(current_user)
+        # print(current_user)
         if current_user.student==True:
             pass
         else:
@@ -181,7 +226,14 @@ def multiple_section(request):
             message="bad     request"
             return HttpResponse(message)
         try:
-            current_user=request.user
+            # current_user=request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
         except:
             message="not available user"
             return HttpResponse(message)
@@ -322,7 +374,14 @@ def test(request):
         data=json.loads(json_data)
 
         try :
-            current_user = request.user
+            # current_user = request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # name=current_user.name
         except:
             message="not logged in"
@@ -480,7 +539,14 @@ def get_own_course_info(request):
             message="bad request"
             return HttpResponse(message)
         try:
-            current_user=request.user
+            # current_user=request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
         except:
             message="not available user"
             return HttpResponse(message)
@@ -644,7 +710,14 @@ def get_own_course_info2(request):
             message="bad request"
             return HttpResponse(message)
         try:
-            current_user=request.user
+            # current_user=request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
         except:
             message="not available user"
             return HttpResponse(message)
@@ -784,7 +857,14 @@ def course_counter(request):
     if request.method=='GET':
         # print("hello")
         try:
-            current_user=request.user
+            # current_user=request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
         except:
             message="not available user"
             return HttpResponse(message)
@@ -862,8 +942,15 @@ def ask_crtification(request):
             course_id=int(request.GET['s'])
         # print("hello")
         try:
-            current_user=request.user
-            print(current_user)
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+            # current_user=request.user
+            # print(current_user)
         except:
             message="not available user"
             return HttpResponse(message)
@@ -928,14 +1015,25 @@ def ask_crtification(request):
 
 
 def return_section_test(request):
-    if request.method=='GET':
+    print("wwwwwwwwwww")
+    if request.method=='GET' or request.method=='OPTIONS':
+        print("zadsfgb")
         if 's' in request.GET:
             section_id=int(request.GET['s'])
         else:
             message="bad request"
             return HttpResponse(message)
         try:
-            current_user=request.user
+            token=request.META["HTTP_TOKEN"]
+            print(token)            
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
+            # current_user=request.user
+            # print(current_user)
         except:
             message="not available user"
             return HttpResponse(message)
