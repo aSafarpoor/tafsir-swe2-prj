@@ -12,8 +12,26 @@ from rest_framework.parsers import JSONParser
 from VideoSend.models import Snippet
 from VideoSend.seralizer import SnippetSerializer
 from rest_framework import status
+from django.shortcuts import render
+from VideoSend import models
+from .forms import DocumentForm
+from django.shortcuts import render
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+
+def simple_upload(request):
+    if request.method == 'POST' and request.FILES['myfile']:
+        myfile = request.FILES['myfile']
+        fs = FileSystemStorage()
+        filename = fs.save(myfile.name, myfile)
+        uploaded_file_url = fs.url(filename)
+    #     return render(request, 'core/simple_upload.html', {
+    #         'uploaded_file_url': uploaded_file_url
+    #     })
+    # return render(request, 'core/simple_upload.html')
 
 
+    return HttpResponse("Salam")
 
 @api_view(['GET', 'POST'])
 def snippet_list(request):
