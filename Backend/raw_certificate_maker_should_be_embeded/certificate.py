@@ -16,7 +16,7 @@ from PIL import Image
 from PIL import ImageDraw
 from random import randint
 
-def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pic):
+def make_certificate(first_name,last_name,passed_day,course_name,teacher_name):
    
     fontFile = "raw_certificate_maker_should_be_embeded/B Koodak Bold.ttf"
    
@@ -27,6 +27,7 @@ def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pi
     imageFile="raw_certificate_maker_should_be_embeded/images.jpg"
     # load the font and image
     
+    pic = "raw_certificate_maker_should_be_embeded/emza.jpg"
     font = ImageFont.truetype(fontFile, 66)
     
     image = Image.open(imageFile)

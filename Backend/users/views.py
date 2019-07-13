@@ -78,7 +78,7 @@ def ct(request):
             print(444444444444)
             current_course=course.objects.filter(course_teacher=current_user)
             print(current_course)
-            dict={}
+            # dict={}
             tem=[]
             t=0
             for i in current_course:
@@ -88,16 +88,45 @@ def ct(request):
                 temp["summary"]=i.summary
                 temp["course_section_number"]=i.course_section_number
                 temp["total_time_of_course"]=i.total_time_of_course
-                temp["course_teacher"]=i.course_teacher
+                temp["course_teacher_fn"]=i.course_teacher.first_name
+                temp["course_teacher_ln"]=i.course_teacher.last_name
                 temp["course_main_field"]=i.course_main_field
                 temp["user_counter"]=i.user_counter
-                print(33333333333333333333)
-                # tem.append(temp)
+                # temp["picture"]=
+                try:
+                    objmovie=file_pull.objects.filter(id=i.picture)[0]
                 
-                dict[str(t)]=str(temp)
-            print(dict)
-            return JsonResponse(dict)
-        except:
+                    r1=request.path
+                    r2=request.build_absolute_uri('/')
+                    #r3=r2[:-1]+r1
+                    r3=r2[:-1]
+
+                    file_=str(objmovie.file.url)
+                    r3+=file_
+                    temp["picture"]=str(r3)
+                except:
+                    pass
+
+                # print(3333333333333333333355555555555555555555)
+                tem.append(temp)
+                
+            # dict["0"]=tem
+            # print(tem)
+            # print(dict)
+            # return JsonResponse(dict)
+
+
+            dicto={}
+            dicto["first"]=tem
+            # dict["last_name"]=current_user.last_name
+            # dict["email"]=current_user.email
+            print(dicto)
+            return JsonResponse(dicto)
+            # return JsonResponse(['a', 'b'], safe=False)
+
+
+        except Exception as e:
+            print(e )
             print("Fffffffffffffffffffff")
             message="404"
             return HttpResponse(message)
@@ -303,18 +332,22 @@ def multiple_section(request):
             try:
                 is_exist=section.objects.filter(course=current_course).exists()
                 query=section.objects.filter(course=current_course)
+                print(query)
             except:
                 message="bed request!!!"
                 return HttpResponse(message)
             
             dict={}
+            # print(222222222222222222222222222222)
+            # print(query)
             try:
                 session_list=[]
-                
+                # print(query)
                 for i in range(len(query)):
                     
                     obj=query[i]
-                    if(obj.part-1<=enable_num):
+                    # if(obj.part-1<=enable_num):
+                    if(True):
                         ii=obj.part-1
                         
                         temp={}
@@ -323,20 +356,41 @@ def multiple_section(request):
                             grade_=int((whw_obj.grade.split("_")[ii+1]))
                         except:
                             grade_=-1
-                        
+                        if(obj.part-1<=enable_num):
+                            temp["is_valid"]=True
+                        else:
+                            temp["is_valid"]=False
                         temp["grade"]=grade_
                         temp["part"]=obj.part
                         temp["id"]=obj.id
                         temp["name"]=obj.name
-                        
+                        temp["detail"]=obj.detail
                         try:
-                            # is_exist=file_pull.objects.filter(id=obj.movie).exists()
-                            # objmovie=file_pull.objects.filter(id=obj.movie)[0].file
-                            # temp["movie"]=objmovie
+                            if(obj.part-1<=enable_num):
+                                print(obj.movie_id)
+                                objmovie=file_pull.objects.filter(id=obj.movie_id)[0]
+                                print(objmovie)
+                                try:
+                                    r1=request.path
+                                    r2=request.build_absolute_uri('/')
+                                    #r3=r2[:-1]+r1
+                                    r3=r2[:-1]
 
-                            objmovie=file_pull.objects.filter(id=obj.movie)[0]
+                                    file_=str(objmovie.file.url)
+                                    r3+=file_
+                                    temp["movie"]=r3
+                                except:
+                                    pass
+
+
                             
-                            try:
+                        except:
+                            # print("zzzzzzzzzzzzzzzz")
+                            temp["movie"]=""
+                        try:
+                            if(obj.part-1<=enable_num):
+                                objmovie=file_pull.objects.filter(id=obj.file)[0]
+            
                                 r1=request.path
                                 r2=request.build_absolute_uri('/')
                                 #r3=r2[:-1]+r1
@@ -344,26 +398,7 @@ def multiple_section(request):
 
                                 file_=str(objmovie.file.url)
                                 r3+=file_
-                                temp["movie"]=r3
-                            except:
-                                pass
-
-
-                            
-                        except:
-                            temp["movie"]=""
-                        try:
-                
-                            objmovie=file_pull.objects.filter(id=obj.file)[0]
-        
-                            r1=request.path
-                            r2=request.build_absolute_uri('/')
-                            #r3=r2[:-1]+r1
-                            r3=r2[:-1]
-
-                            file_=str(objmovie.file.url)
-                            r3+=file_
-                            temp["file"]=r3
+                                temp["file"]=r3
 
                         
                         except:
@@ -398,18 +433,17 @@ def multiple_section(request):
     return HttpResponse(message)
 
 def test(request):
-    ddd=1
-    print(11111*ddd)
-    ddd+=1
+    
     if request.method=="POST":
         try:
             json_data=request.body
-
+            print(json_data)
         except:
             message="bad url"
             return HttpResponse(message)
 
         data=json.loads(json_data)
+        print(data)
 
         try :
             # current_user = request.user
@@ -421,6 +455,7 @@ def test(request):
     
             current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # name=current_user.name
+            print(current_user)
         except:
             message="not logged in"
             return HttpResponse(message)
@@ -430,8 +465,7 @@ def test(request):
         else:
             message="user is not a student"
             return HttpResponse(message)
-        print(11111*ddd)
-        ddd+=1
+        
         try:
             is_exist=course.objects.filter(id=data["course_id"]).exists()
             if(is_exist==False):
@@ -467,31 +501,29 @@ def test(request):
             return HttpResponse(message)
 
         try:
-            print("eeeeeeeeeeeeeeeeee")
-            ddd+=1
+            ans=data["answers"]
             counter=len(data)
-            counter-=2
+            # counter-=2
 
-            print(data)
-            print("data is: ",data)
+            print(ans)
+            # print("data is: ",data)
             cur_time=int(time.time()*1000000)
-            print(cur_time)
-            print(cur_time-int(whw_obj.last_time_question_req))
-            print(counter*80*1000000)
+            # print(cur_time)
+            # print(cur_time-int(whw_obj.last_time_question_req))
+            # print(counter*80*1000000)
             if(cur_time-int(whw_obj.last_time_question_req)>counter*80*1000000):
                 message="too late :("
                 return HttpResponse(message)
             
             true_counter=0
-            print("rrrrrrrrrrrrrrr")
             for i in range(1,counter+1):
                 num=i
-                print("num is: ",num)
-                print(current_section)
+                # print("num is: ",num)
+                # print(current_section)
                 try:
                     q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
                     
-                    choice=data[str(num)]
+                    choice=ans[num]
                     true_choice=q_obj.true_choice
                     
                     if(choice==true_choice):
@@ -499,7 +531,6 @@ def test(request):
                 except:
                     pass
             c=int(true_counter*100/counter)
-            print("rrrrrrrrrrrrrrrrrr")
             if(c>70):
                 if(whw_obj.last_pass_section+1==current_section.part):
                     whw_obj.last_pass_section+=1
@@ -1120,13 +1151,17 @@ def return_section_test(request):
             dict={}
             try:
                 q_list=[]
+                print(333334343333333333333333333333)
+                print(query)
+                
                 for i in range(len(query)):
                     obj=query[i]
-                    if(current_section.part<=enable_num):
-                      
+                    print(current_section.part,enable_num,"    rrrrrrrrrrrrrrrrrrr")
+                    if(current_section.part-1<=enable_num):
+                        print(111111111111111111)
 
                         temp={}
-                       
+                        print(obj)
 
                         temp={}
                         temp["course_id"]=current_course.id 
@@ -1137,12 +1172,12 @@ def return_section_test(request):
                         temp["choice2"]=obj.choice2
                         temp["choice3"]=obj.choice3
                         temp["choice4"]=obj.choice4
-
+                        print(temp)
                         q_list.append(temp)
-             
-                # print(session_list)
+                    print(99999999999999999)
+                print(q_list)
                 dict["q_list"]=q_list
-                
+                print(dict)
                 #add general info:
                 
             except:
