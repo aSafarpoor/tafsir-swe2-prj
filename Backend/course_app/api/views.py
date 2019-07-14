@@ -5,7 +5,7 @@ from  .serializers import CourseListSerializer,fileListSerializer
 import json
 from django.http import HttpResponse
 from users.models import CustomUser
-
+import requests
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
     serializer_class = CourseListSerializer
@@ -14,6 +14,8 @@ class CourseListAPIview(generics.ListAPIView):
     serializer_class = SectionListSerializer
 '''
 class FileCreateAPIview(generics.CreateAPIView):
+    # permission_classes = (request.user.teacher,)
+
     queryset = file_pull.objects.all()
     serializer_class = fileListSerializer
 

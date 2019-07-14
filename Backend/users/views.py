@@ -1009,7 +1009,7 @@ def ask_crtification(request):
     if request.method=='GET':
         if 's' in request.GET:
             course_id=int(request.GET['s'])
-        # print("hello")
+        print("hellodddddddddddddd")
         try:
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
@@ -1019,7 +1019,7 @@ def ask_crtification(request):
     
             current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # current_user=request.user
-            # print(current_user)
+            print(current_user)
         except:
             message="not available user"
             return HttpResponse(message)
@@ -1037,7 +1037,7 @@ def ask_crtification(request):
         except:
             message="not enough data"
             return HttpResponse(message)
-
+        print(2222222222222222222222)
         try:
             is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
 
@@ -1053,7 +1053,7 @@ def ask_crtification(request):
         try:
             if(whw_obj.course_completed):
                 first_name=current_user.first_name
-                pic=current_user.picture
+                # pic=current_user.picture
                 last_name=current_user.last_name
 
                 passed_day=whw_obj.course_finished_time
@@ -1061,14 +1061,14 @@ def ask_crtification(request):
                 course_name=current_course.name
       
                 teacher_name=current_course.course_teacher.full_name
-                # print("complete informations")
-                adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pic)
-                
+                print("complete informations")
+                adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
+                print(6666666666666)
                 domain = request.get_host()
                 adrs=domain+"/"+adrs
                 dict={}
                 dict["certificate"]=adrs
-                               
+                print(dict)
                 return JsonResponse(dict)
                 
             else:
