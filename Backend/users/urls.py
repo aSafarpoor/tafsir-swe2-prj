@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^teacher_list', views.TeacherListView.as_view()),
     url(r'^create',views.create),
     url(r'^student_list', views.StudentListView.as_view()),
-    url(r'^teacher_courses',views.JoinTable,name='teacher_courses') ,
+    url(r'^teacher_courses/(?P<id>\w{0,50})/$',views.JoinTable.as_view(),name='teacher_courses') ,
     url(r'^teacher_info/(?P<id>\w{0,50})/$', views.TeacherDetailsAPIView.as_view()),
     url(r'^register',views.register),
     url(r'^user_info',views.user_info),
@@ -22,8 +22,8 @@ urlpatterns = [
     url(r'^course_counter',views.course_counter),
     url(r'^return_section_test',views.return_section_test),
     url(r'^user_courses',views.user_courses),
-    
     url(r'^ask_certification',views.ask_crtification),
+    url(r'^ct',views.ct),
 
 ]
 

@@ -16,8 +16,8 @@ from PIL import Image
 from PIL import ImageDraw
 from random import randint
 
-def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pic):
-   
+def make_certificate(first_name,last_name,passed_day,course_name,teacher_name):
+    print(passed_day)
     fontFile = "raw_certificate_maker_should_be_embeded/B Koodak Bold.ttf"
    
     # this was a 400x400 jpg file
@@ -27,34 +27,37 @@ def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pi
     imageFile="raw_certificate_maker_should_be_embeded/images.jpg"
     # load the font and image
     
+    pic = "raw_certificate_maker_should_be_embeded/emza.jpg"
     font = ImageFont.truetype(fontFile, 66)
-    
+    print(7777777777777777)
     image = Image.open(imageFile)
-    
+    print(666666666666)
     text="\n"*32+" گواهی میشود آقا/خانم "+first_name+" "+last_name+" "*(178-(23+len(first_name)+len(last_name)))
     text+="\n\n"+" دوره "+course_name+" "+" "*(193-len(course_name)-6)
     text+="\n\n"+" ارائه شده توسط "+teacher_name+ " "*(155-len(teacher_name))
+    print(3333333333)
     text+="\n"*2+" را در تاریخ "+str(passed_day[1:-1])+" "*(162)
+    print(99999999999999999)
     text+="\n\n"+"با موفقیت گذرانده است"+"."+" "*165
-
+    print(88888888888)
     reshaped_text = arabic_reshaper.reshape(text)    # correct its shape
     bidi_text = get_display(reshaped_text)           # correct its direction
 
-    
+    print(99999999999999)
 
     # start drawing on image
     draw = ImageDraw.Draw(image)
-    draw.text((0,0), bidi_text, (255,0,255), font=font)
+    draw.text((100,100), bidi_text, (255,0,255), font=font)
     draw = ImageDraw.Draw(image)
     
     image2 = Image.open(pic)
     
-    image2 = image2.resize( (380,500), Image.ANTIALIAS) 
+    image2 = image2.resize( (400,620), Image.ANTIALIAS) 
     # img = Image.open('/path/to/file'?, 'r')
     img_w, img_h = image2.size
     background = image#Image.new('RGBA', (1440, 900), (255, 255, 255, 255))
     bg_w, bg_h = background.size
-    offset = ((bg_w - img_w) // 9, (bg_h - img_h) // 3)
+    offset = ((bg_w - img_w) // 9, (bg_h - img_h) // 2)
     background.paste(image2, offset)
     # background.save('outttt.png')
 
@@ -65,7 +68,7 @@ def make_certificate(first_name,last_name,passed_day,course_name,teacher_name,pi
 
     # image.save("raw_certificate_maker_should_be_embeded/media/output.png",resolution=100.0)
     image.save(adrs,resolution=100.0)
-    
+    print(adrs," dddddddddddddddddd")
     return adrs
     # imageFile="raw_certificate_maker_should_be_embeded/media/output.pdf"
     

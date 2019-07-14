@@ -5,7 +5,7 @@ from  .serializers import CourseListSerializer,fileListSerializer
 import json
 from django.http import HttpResponse
 from users.models import CustomUser
-
+import requests
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
     serializer_class = CourseListSerializer
@@ -14,6 +14,8 @@ class CourseListAPIview(generics.ListAPIView):
     serializer_class = SectionListSerializer
 '''
 class FileCreateAPIview(generics.CreateAPIView):
+    # permission_classes = (request.user.teacher,)
+
     queryset = file_pull.objects.all()
     serializer_class = fileListSerializer
 
@@ -36,7 +38,14 @@ def create(request):
         try :
             # current_user = request.user
             ###############################
-            current_user = CustomUser.objects.all()[0]
+            # current_user = CustomUser.objects.all()[0]
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # current_course=course.objects.filter( )
             # name=current_user.name
         except:
@@ -257,7 +266,14 @@ def edit(request):
         data=json.loads(json_data)
 
         try :
-            current_user = request.user
+            # current_user = request.user
+            token=request.META["HTTP_TOKEN"]
+            if(token[0]=="\""):
+                token=token[1:-1]
+            
+            obj = Token.objects.filter(key=token)[0]
+    
+            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
             # name=current_user.name
         except:
             message="not logged in"
@@ -431,6 +447,8 @@ def edit(request):
 
 
 
+''''
+
 
 from rest_framework.serializers import ModelSerializer
 from image_file_test.models import image_file as imfi
@@ -442,8 +460,6 @@ from course_app.models import file_pull
 
 from rest_framework.decorators import api_view
 
-
-''''
 
 class MyImageModelSerializer(ModelSerializer):
     class Meta:
