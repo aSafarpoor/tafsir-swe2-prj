@@ -51,11 +51,9 @@ class JoinTable(generics.ListAPIView):
 
 
 def ct(request):
-    print("11111111111")
     if request.method=='GET':
                       
         try:
-            print(2222222222222222)
             try :
                 token=request.META["HTTP_TOKEN"]
                 if(token[0]=="\""):
@@ -70,12 +68,11 @@ def ct(request):
                 return HttpResponse(message)
 
             is_course_exist=course.objects.filter(course_teacher=current_user).exists()
-            print(3333333333333333333)
-            print(is_course_exist)
+           
+           
             if(is_course_exist==False):
                 message="not eanble course"
                 return HttpResponse(message)
-            print(444444444444)
             current_course=course.objects.filter(course_teacher=current_user)
             print(current_course)
             # dict={}
@@ -127,10 +124,9 @@ def ct(request):
 
         except Exception as e:
             print(e )
-            print("Fffffffffffffffffffff")
             message="404"
             return HttpResponse(message)
-    print("dddddddddddddd")
+   
     message="404"
     return HttpResponse(message)
 
@@ -179,7 +175,6 @@ def user_info(request):
 def user_courses(request):
    
     if request.method=="GET" or request.method=="OPTIONS":
-        print("saaaaaaaa")
         try :
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
@@ -193,11 +188,9 @@ def user_courses(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        print(current_user)
         dict={}
         dict["name"]=""
         query=who_has_what.objects.filter(course_user=current_user)
-        print(query)
         t=0
         for i in query:
             t+=1
@@ -205,9 +198,7 @@ def user_courses(request):
             #temp["id"]=i.course_name.id
             dict["name"]+=str(i.course_name.name)+"***"
 	    
-            #dict[str(t)]=temp
-
-        print("asddddddddddddddddd")
+           
         return JsonResponse(dict)
     
     message="bad request"
@@ -229,7 +220,6 @@ def register(request):
         data=json.loads(json_data)
         print(data)
         try :
-            print(1111111111111)
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
                 token=token[1:-1]
@@ -243,7 +233,6 @@ def register(request):
         except:
             message="not logged in"
             return HttpResponse(message)
-        print(current_user,"sssssssssssssssssssss")
         if current_user.student==True:
             pass
         else:
@@ -286,7 +275,6 @@ def register(request):
 
 def multiple_section(request):
     if request.method=='GET':
-        print(11111111111111)
         if 's' in request.GET:
             requested_id=int(request.GET['s'])
         else:
@@ -304,7 +292,6 @@ def multiple_section(request):
         except:
             message="not available user"
             return HttpResponse(message)
-        print("helooo")        
         try:
             # who_has_what
 
@@ -332,7 +319,7 @@ def multiple_section(request):
             try:
                 is_exist=section.objects.filter(course=current_course).exists()
                 query=section.objects.filter(course=current_course)
-                print(query)
+                
             except:
                 message="bed request!!!"
                 return HttpResponse(message)
@@ -367,9 +354,9 @@ def multiple_section(request):
                         temp["detail"]=obj.detail
                         try:
                             if(obj.part-1<=enable_num):
-                                print(obj.movie_id)
+                               
                                 objmovie=file_pull.objects.filter(id=obj.movie_id)[0]
-                                print(objmovie)
+                                
                                 try:
                                     r1=request.path
                                     r2=request.build_absolute_uri('/')
@@ -407,7 +394,6 @@ def multiple_section(request):
                         #dict[obj.part]=temp
                         session_list.append(temp)
 
-                print(session_list)
                 dict["sessions"]=session_list
                 
                 #add general info:
@@ -437,7 +423,7 @@ def test(request):
     if request.method=="POST":
         try:
             json_data=request.body
-            print(json_data)
+            
         except:
             message="bad url"
             return HttpResponse(message)
@@ -454,8 +440,7 @@ def test(request):
             obj = Token.objects.filter(key=token)[0]
     
             current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
-            # name=current_user.name
-            print(current_user)
+           
         except:
             message="not logged in"
             return HttpResponse(message)
@@ -505,12 +490,8 @@ def test(request):
             counter=len(data)
             # counter-=2
 
-            print(ans)
             # print("data is: ",data)
             cur_time=int(time.time()*1000000)
-            # print(cur_time)
-            # print(cur_time-int(whw_obj.last_time_question_req))
-            # print(counter*80*1000000)
             if(cur_time-int(whw_obj.last_time_question_req)>counter*80*1000000):
                 message="too late :("
                 return HttpResponse(message)
@@ -518,8 +499,6 @@ def test(request):
             true_counter=0
             for i in range(1,counter+1):
                 num=i
-                # print("num is: ",num)
-                # print(current_section)
                 try:
                     q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
                     
@@ -659,10 +638,7 @@ def get_own_course_info(request):
                         temp["part"]=obj.part
                         temp["name"]=obj.name
                         
-                        # is_exist=file_pull.objects.filter(id=obj.movie).exists()
-                        # objmovie=section.objects.filter(id=obj.movie)[0]
-                        # temp["movie"]=objmovie
-                        
+                       
             
                         try:
                             objmovie=file_pull.objects.filter(id=obj.movie)[0]
@@ -735,9 +711,7 @@ def get_own_course_info(request):
 
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
-                # temp["ref"]=current_course.ref
-                # temp["price"]=current_course.price
-                #temp["course_teacher"]=current_user
+                
                 temp["course_main_field"]=current_course.course_main_field
 
 
@@ -829,11 +803,7 @@ def get_own_course_info2(request):
 
                         temp["part"]=obj.part
                         temp["name"]=obj.name
-                        # temp["movie"]=obj.movie
-
                        
-                        # objmovie=file_pull.objects.filter(id=obj.file)[0]
-                        # temp["file"]=objmovie
                         try:
                             objmovie=file_pull.objects.filter(id=obj.file)[0]
                             r1=request.path
@@ -879,19 +849,14 @@ def get_own_course_info2(request):
 
                         dict[obj.part]=temp
 
-                #add general info:
                 temp={}
                 temp["name"]=current_course.name
 
                 temp["summary"]=current_course.summary
-                # temp["pre_movie"]=current_course.pre_movie
-                # temp["Headlines"]=current_course.Headlines
-
+                
                 temp["course_section_number"]=current_course.course_section_number
                 temp["total_time_of_course"]=current_course.total_time_of_course
-                # temp["ref"]=current_course.ref
-                # temp["price"]=current_course.price
-                #temp["course_teacher"]=current_user
+                
                 temp["course_main_field"]=current_course.course_main_field
 
 
@@ -924,9 +889,7 @@ def get_own_course_info2(request):
 
 def course_counter(request):
     if request.method=='GET':
-        # print("hello")
         try:
-            # current_user=request.user
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
                 token=token[1:-1]
@@ -1009,7 +972,6 @@ def ask_crtification(request):
     if request.method=='GET':
         if 's' in request.GET:
             course_id=int(request.GET['s'])
-        print("hellodddddddddddddd")
         try:
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
@@ -1037,7 +999,6 @@ def ask_crtification(request):
         except:
             message="not enough data"
             return HttpResponse(message)
-        print(2222222222222222222222)
         try:
             is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
 
@@ -1063,7 +1024,7 @@ def ask_crtification(request):
                 teacher_name=current_course.course_teacher.full_name
                 print("complete informations")
                 adrs=make_certificate(first_name,last_name,passed_day,course_name,teacher_name)
-                print(6666666666666)
+               
                 domain = request.get_host()
                 adrs=domain+"/"+adrs
                 dict={}
@@ -1087,7 +1048,6 @@ from django_csrf_protect_form import csrf_protect_form
 @csrf_protect_form
 def return_section_test(request):
 
-    print("wwwwwwwwwww")
     if request.method=='GET' or request.method=='OPTIONS':
         print("zadsfgb")
         if 's' in request.GET:
@@ -1104,8 +1064,7 @@ def return_section_test(request):
             obj = Token.objects.filter(key=token)[0]
     
             current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
-            # current_user=request.user
-            # print(current_user)
+           
         except:
             message="not available user"
             return HttpResponse(message)
@@ -1120,8 +1079,7 @@ def return_section_test(request):
             current_section=section.objects.filter(id=section_id)[0]
             current_course=current_section.course
             try:
-                # print(current_user.first_name[::-1],"                  ----            ",currunt_course.name[::-1])
-
+              
 
                 is_registered=who_has_what.objects.filter(course_user=current_user,course_name=current_course).exists()
 
@@ -1151,14 +1109,13 @@ def return_section_test(request):
             dict={}
             try:
                 q_list=[]
-                print(333334343333333333333333333333)
-                print(query)
+               
                 
                 for i in range(len(query)):
                     obj=query[i]
                     print(current_section.part,enable_num,"    rrrrrrrrrrrrrrrrrrr")
                     if(current_section.part-1<=enable_num):
-                        print(111111111111111111)
+                     
 
                         temp={}
                         print(obj)
@@ -1172,13 +1129,9 @@ def return_section_test(request):
                         temp["choice2"]=obj.choice2
                         temp["choice3"]=obj.choice3
                         temp["choice4"]=obj.choice4
-                        print(temp)
                         q_list.append(temp)
-                    print(99999999999999999)
-                print(q_list)
+             
                 dict["q_list"]=q_list
-                print(dict)
-                #add general info:
                 
             except:
                 message="404"
