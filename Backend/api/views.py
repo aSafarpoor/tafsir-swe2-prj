@@ -23,7 +23,7 @@ class CustomLoginView(LoginView):
         if not teacher and not student :
             user = "nothing"
 
-        mydata = {"user type": user,
+        mydata = {"type": user,
         }
         orginal_response.data.update(mydata)
         return orginal_response

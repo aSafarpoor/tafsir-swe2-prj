@@ -5,6 +5,8 @@ from  .serializers import CourseListSerializer,fileListSerializer
 import json
 from django.http import HttpResponse
 from users.models import CustomUser
+
+from rest_framework.authtoken.models import Token
 import requests
 class CourseListAPIview(generics.ListAPIView):
     queryset = course.objects.all()
@@ -28,18 +30,21 @@ def create(request):
         except:
             message="bad urllll"
             return HttpResponse(message)
-        # print(json_data)
+        #print(json_data)
         data=json.loads(json_data)
 
         try :
+            print("zzzzzzzzzzzz")
             token=request.META["HTTP_TOKEN"]
             if(token[0]=="\""):
                 token=token[1:-1]
-            
+            print(token)
             obj = Token.objects.filter(key=token)[0]
-    
-            current_user = models.CustomUser.objects.filter(id=obj.user_id)[0]
-         
+            print(obj)
+            # current_user = models.CustomUser.objects.filter(username='ali')[0]
+            current_user = CustomUser.objects.filter(id=obj.user_id)[0]
+            print("sssss  ",current_user," ssss") 
+            
         except:
             message="not logged in"
             return HttpResponse(message)

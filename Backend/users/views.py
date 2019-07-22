@@ -419,6 +419,8 @@ def multiple_section(request):
     return HttpResponse(message)
 
 def test(request):
+    message='20'
+    return HttpResponse(message)
     
     if request.method=="POST":
         try:
@@ -502,7 +504,7 @@ def test(request):
                 try:
                     q_obj=question_exam.objects.filter(which_section=current_section,number=num)[0]
                     
-                    choice=ans[num]
+                    choice=ans[num-1]
                     true_choice=q_obj.true_choice
                     
                     if(choice==true_choice):

@@ -24,7 +24,7 @@ class WhatPersonHave(ModelSerializer):
         model = course
         fields = '__all__'
         # fields=('name','summary','picture')
-class regserializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.CustomUser
-        fields = ('email','username','password','phone_number')
+# class regserializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.CustomUser
+#         fields = ('email','username','password','phone_number')

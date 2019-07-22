@@ -177,6 +177,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 #         'MainMedicaApp.serializers.auth_serializers.CustomPasswordResetConfirmSerializer',
 #     'PASSWORD_CHANGE_SERIALIZER': 'MainMedicaApp.serializers.auth_serializers.CustomPasswordChangeSerializer',
 # }
-REST_AUTH_REGISTER_SERIALIZERS = {
-     'REGISTER_SERIALIZER': 'users.serializers.regserializer',
-}
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#      'REGISTER_SERIALIZER': 'users.serializers.regserializer',
+# }
